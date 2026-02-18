@@ -1,0 +1,12 @@
+node_modules/
+dist/
+logs/
+.env
+.env.local
+.env.production
+*.key
+*.pem
+*.cert
+*.crt
+*.tsbuildinfo
+.claude/

@@ -1,0 +1,55 @@
+{
+  "name": "@ayatec/ai-gateway-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server for multi-model AI access via Vercel AI Gateway",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "ai-gateway-mcp-server": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "dev:tool": "tsx scripts/test-tool.ts",
+    "clean": "rm -rf dist",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "keywords": [
+    "mcp",
+    "ai-gateway",
+    "vercel",
+    "multi-model",
+    "openai",
+    "anthropic",
+    "google",
+    "perplexity"
+  ],
+  "author": "ayatec",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "packageManager": "pnpm@10.15.1",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.0",
+    "ai": "^6.0.90",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "@types/node": "^24.10.13",
+    "dotenv": "^17.3.1",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.0"
+  }
+}
