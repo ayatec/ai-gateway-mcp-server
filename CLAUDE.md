@@ -42,12 +42,12 @@ scripts/
 3. **research** — 複数モデル並列調査（ask/searchモード、synthesize on/off、2-4モデル）
 4. **list_models** — モデル一覧（provider/capabilityフィルタ対応）
 
-### 対応プロバイダー・モデル（15モデル）
+### 対応プロバイダー・モデル（13モデル）
 
 - **OpenAI**: gpt-5.2, gpt-5.2-codex, gpt-5-mini, gpt-5-nano, gpt-oss-120b
 - **Anthropic**: claude-opus-4.6, claude-sonnet-4.6, claude-haiku-4.5
 - **Google**: gemini-3-flash, gemini-3-pro-preview
-- **Perplexity**: sonar, sonar-pro, sonar-reasoning, sonar-reasoning-pro
+- **Perplexity**: sonar, sonar-pro, sonar-reasoning-pro
 
 ### 環境変数
 

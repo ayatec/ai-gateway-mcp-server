@@ -178,21 +178,6 @@ const models: ModelDefinition[] = [
     note: '高精度検索',
   },
   {
-    id: 'perplexity/sonar-reasoning',
-    provider: 'perplexity',
-    displayName: 'Perplexity Sonar Reasoning',
-    contextWindow: 127_000,
-    capabilities: { search: true, reasoning: true, coding: false, fast: false, cheap: false },
-    pricing: { input: 1.0, output: 5.0 },
-    searchCost: {
-      type: 'per_request',
-      costPerRequest: 0.005,
-      description: '$0.005/検索リクエスト、inputトークン膨張なし',
-    },
-    maxOutputTokens: 16384,
-    note: '推論+検索',
-  },
-  {
     id: 'perplexity/sonar-reasoning-pro',
     provider: 'perplexity',
     displayName: 'Perplexity Sonar Reasoning Pro',

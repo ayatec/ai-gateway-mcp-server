@@ -90,7 +90,6 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 | -------------------------------- | ----- | ------ | ---- | --------------------------------- |
 | `perplexity/sonar`               | $1.00 | $1.00  | Yes  | ネイティブ検索、search デフォルト |
 | `perplexity/sonar-pro`           | $3.00 | $15.00 | Yes  | 高精度検索                        |
-| `perplexity/sonar-reasoning`     | $1.00 | $5.00  | Yes  | 推論+検索                         |
 | `perplexity/sonar-reasoning-pro` | $2.00 | $8.00  | Yes  | 推論+高精度検索                   |
 
 > 価格は 1M トークンあたり（USD）
