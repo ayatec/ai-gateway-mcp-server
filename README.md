@@ -14,7 +14,7 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 | `question`   | string | Yes  | -                | 質問内容           |
 | `model`      | string | No   | `openai/gpt-5.2` | モデル ID          |
 | `context`    | string | No   | -                | 追加コンテキスト   |
-| `max_tokens` | number | No   | モデル依存       | 最大出力トークン数 |
+| `max_tokens` | number | No   | `2000`           | 最大出力トークン数 |
 
 ### `search` -- Web 検索
 
