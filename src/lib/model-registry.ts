@@ -50,12 +50,8 @@ const models: ModelDefinition[] = [
     provider: 'openai',
     displayName: 'GPT-5 Nano',
     contextWindow: 400_000,
-    capabilities: { search: true, reasoning: false, coding: false, fast: true, cheap: true },
+    capabilities: { search: false, reasoning: false, coding: false, fast: true, cheap: true },
     pricing: { input: 0.05, cachedInput: 0.0125, output: 0.4 },
-    searchCost: {
-      type: 'token_based',
-      description: '検索結果がinputトークンに含まれる（膨張大）',
-    },
     maxOutputTokens: 16384,
     note: '最安',
   },

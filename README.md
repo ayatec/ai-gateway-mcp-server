@@ -66,7 +66,7 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 | `openai/gpt-5.2`       | $1.75 | $14.00 | Yes  | フラッグシップ、ask デフォルト |
 | `openai/gpt-5.2-codex` | $1.75 | $14.00 | Yes  | コード特化                     |
 | `openai/gpt-5-mini`    | $0.25 | $2.00  | Yes  | バランス型                     |
-| `openai/gpt-5-nano`    | $0.05 | $0.40  | Yes  | 最安                           |
+| `openai/gpt-5-nano`    | $0.05 | $0.40  | No   | 最安                           |
 | `openai/gpt-oss-120b`  | $0.10 | $0.50  | No   | OSS                            |
 
 ### Anthropic
