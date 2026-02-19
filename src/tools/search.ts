@@ -20,9 +20,9 @@ export const searchSchema = z.object({
     .int()
     .positive()
     .optional()
-    .default(1000)
+    .default(2000)
     .describe(
-      'Max output tokens. Search results are typically concise; increase for comprehensive summaries',
+      'Max output tokens (default: 2000). 1000-2000 for quick lookups, 4000+ for comprehensive summaries. Reasoning models consume tokens internally, so set higher when using sonar-reasoning-pro',
     ),
 });
 

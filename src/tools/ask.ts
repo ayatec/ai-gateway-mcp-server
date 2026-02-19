@@ -24,9 +24,9 @@ export const askSchema = z.object({
     .int()
     .positive()
     .optional()
-    .default(2000)
+    .default(4000)
     .describe(
-      'Max output tokens. Use lower (500-1000) for concise answers, higher (4000+) for detailed explanations',
+      'Max output tokens (default: 4000). Guide: 500-1000 for short answers, 2000-4000 for explanations, 8000+ for detailed analysis. Reasoning models (e.g. sonar-reasoning-pro) use tokens internally for thinking, so set 2x-3x higher than expected output length',
     ),
 });
 

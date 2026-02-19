@@ -56,9 +56,9 @@ export const researchSchema = z.object({
     .int()
     .positive()
     .optional()
-    .default(1000)
+    .default(2000)
     .describe(
-      'Max output tokens per model in query stage. 4 models x 1000 = ~4000 tokens fed to synthesis',
+      'Max output tokens per model in query phase (default: 2000). Total fed to synthesis = models x max_tokens. Reasoning models use tokens for internal thinking, so their visible output may be shorter',
     ),
   synthesis_max_tokens: z
     .number()
@@ -162,7 +162,7 @@ export async function researchHandler(
     };
   }
 
-  // 4モデル×1000=4000トークンの統合には2倍(2000)では不十分なため3倍をデフォルトに
+  // 4モデル×2000=8000トークンの統合には3倍をデフォルトに
   const synthesisMaxTokens = args.synthesis_max_tokens ?? args.max_tokens * 3;
 
   const synthesisPrompt =
