@@ -133,15 +133,37 @@ claude mcp add ai-gateway npx @ayatec/ai-gateway-mcp-server -e AI_GATEWAY_API_KE
 
 #### ローカルビルドで使う場合
 
+開発中のバージョンを使いたい場合や、ソースを修正して使いたい場合はこちら。
+
 ```bash
 git clone https://github.com/ayatec/ai-gateway-mcp-server.git
 cd ai-gateway-mcp-server
+cp .env.example .env
+# .env を編集して API キーを設定
 pnpm install
 pnpm build
 ```
 
+##### Claude Code
+
 ```bash
 claude mcp add ai-gateway node /path/to/ai-gateway-mcp-server/dist/index.js -e AI_GATEWAY_API_KEY=your-key
+```
+
+##### Claude Desktop / その他の MCP クライアント
+
+```json
+{
+  "mcpServers": {
+    "ai-gateway": {
+      "command": "node",
+      "args": ["/path/to/ai-gateway-mcp-server/dist/index.js"],
+      "env": {
+        "AI_GATEWAY_API_KEY": "your-key"
+      }
+    }
+  }
+}
 ```
 
 ## 開発
