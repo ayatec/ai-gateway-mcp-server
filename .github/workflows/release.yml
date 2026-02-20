@@ -20,7 +20,6 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
 
       - run: pnpm install --frozen-lockfile
 
@@ -59,8 +58,15 @@ jobs:
             echo "needed=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Setup npm for trusted publishing
+        if: steps.publish.outputs.needed == 'true'
+        run: |
+          npm install -g npm@latest
+          npm config set //registry.npmjs.org/:_authToken ""
+          echo "npm version: $(npm --version)"
+
       - name: Build and publish
         if: steps.publish.outputs.needed == 'true'
         run: |
           pnpm build
-          npm publish --access public
+          npm publish --access public --provenance
