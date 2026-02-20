@@ -201,6 +201,23 @@ const models: ModelDefinition[] = [
     releasedAt: '2025-03-07',
     note: '推論+高精度検索',
   },
+  {
+    id: 'perplexity/sonar-deep-research',
+    provider: 'perplexity',
+    displayName: 'Perplexity Sonar Deep Research',
+    contextWindow: 128_000,
+    capabilities: { search: true, reasoning: true, coding: false, fast: false, cheap: false },
+    pricing: { input: 2.0, output: 8.0 },
+    searchCost: {
+      type: 'per_request',
+      costPerRequest: 0.005,
+      description:
+        '$0.005/検索リクエスト（1回で複数回検索を自動実行）、推論トークン$3/1M、引用トークン$2/1M が別途発生',
+    },
+    maxOutputTokens: 16384,
+    releasedAt: '2025-03-07',
+    note: 'エージェント型マルチ検索調査、コスト構造が複雑',
+  },
 ];
 
 // インデックスで高速アクセス
