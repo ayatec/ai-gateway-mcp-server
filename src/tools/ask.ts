@@ -57,6 +57,6 @@ export async function askHandler(
 export const askTool = {
   name: 'ask',
   description:
-    'Ask an AI model a question (no web search). Default: openai/gpt-5.2 (flagship, $1.75/$14, 400K ctx). For code: openai/gpt-5.2-codex. For cheaper: openai/gpt-5-mini ($0.25/$2) or google/gemini-3-flash ($0.50/$3). For cheapest: openai/gpt-5-nano ($0.05/$0.40).',
+    'Ask a single AI model a question (no web search, cannot retrieve latest/real-time information). Default: openai/gpt-5.2 (flagship, $1.75/$14, 400K ctx). For multiple perspectives on a question, prefer research tool with mode:ask synthesize:false. For code: openai/gpt-5.2-codex. For cheaper: openai/gpt-5-mini ($0.25/$2) or google/gemini-3-flash ($0.50/$3). For cheapest: openai/gpt-5-nano ($0.05/$0.40).',
   paramsSchema: askSchema.shape,
 };

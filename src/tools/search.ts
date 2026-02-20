@@ -7,7 +7,9 @@ export const searchSchema = z.object({
   query: z
     .string()
     .min(1)
-    .describe("Search query in natural language, e.g. 'latest Next.js 15 features'"),
+    .describe(
+      'Search query in natural language with detailed context (background, requirements, specific situation). Use "latest" or "current" instead of specific years',
+    ),
   model: z
     .string()
     .optional()
