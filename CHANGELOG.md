@@ -1,5 +1,11 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.3.0
+
+### Minor Changes
+
+- [`9771fc2`](https://github.com/ayatec/ai-gateway-mcp-server/commit/9771fc2df1e0637e1b0769edad6f74791c856500) Thanks [@ayatec](https://github.com/ayatec)! - モデル説明文を技術的な表現に改善し、searchツールのデフォルトモデルをgoogle/gemini-3-flashに変更
+
 ## 0.2.1
 
 ### Patch Changes
