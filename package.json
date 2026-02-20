@@ -17,7 +17,12 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "keywords": [
     "mcp",
@@ -31,6 +36,25 @@
   ],
   "author": "ayatec",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ayatec/ai-gateway-mcp-server.git"
+  },
+  "homepage": "https://github.com/ayatec/ai-gateway-mcp-server#readme",
+  "bugs": {
+    "url": "https://github.com/ayatec/ai-gateway-mcp-server/issues"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "engines": {
     "node": ">=22.22.0"
   },
@@ -41,6 +65,8 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.5.2",
+    "@changesets/cli": "^2.29.8",
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.3.0",
     "dotenv": "^17.3.1",
@@ -50,7 +76,8 @@
     "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.56.0"
+    "typescript-eslint": "^8.56.0",
+    "vitest": "^4.0.18"
   },
   "pnpm": {
     "overrides": {
