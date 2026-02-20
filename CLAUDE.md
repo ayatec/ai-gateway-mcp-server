@@ -11,6 +11,8 @@ pnpm dev            # ウォッチモードでビルド
 pnpm start          # サーバー起動（ビルド後）
 pnpm dev:tool       # ツールの手動テスト
 pnpm clean          # ビルド成果物削除
+pnpm test           # テスト実行（Vitest）
+pnpm test:watch     # テスト（ウォッチモード）
 pnpm type-check     # 型チェック
 pnpm lint           # ESLint実行
 pnpm lint:fix       # ESLint自動修正
@@ -24,15 +26,19 @@ pnpm format:check   # フォーマットチェック
 
 ```
 src/
-  config.ts         # 環境変数・サーバー設定
-  index.ts          # エントリポイント
-  types/            # 型定義
-  providers/        # プロバイダー初期化（Gateway baseURL経由）
-  lib/              # Gateway ラッパー・モデルレジストリ
-  tools/            # MCPツール（ask, search, research, list_models）
-  utils/            # ユーティリティ（logger, cost, format）
+  config.ts              # 環境変数・サーバー設定
+  index.ts               # エントリポイント
+  types/                 # 型定義
+  providers/             # プロバイダー初期化（Gateway baseURL経由）
+  lib/                   # Gateway ラッパー・モデルレジストリ
+    __tests__/           # lib のユニットテスト
+  tools/                 # MCPツール（ask, search, research, list_models）
+    __tests__/           # tools のユニットテスト
+  utils/                 # ユーティリティ（logger, cost, format）
 scripts/
-  test-tool.ts      # ローカルテスト用CLI
+  test-tool.ts           # ローカルテスト用CLI
+.changeset/              # Changesets 設定・changeset ファイル
+.github/workflows/       # GitHub Actions（CI, Release）
 ```
 
 ### 提供ツール
@@ -60,9 +66,29 @@ scripts/
 全プロバイダーが同一の Gateway baseURL（`https://ai-gateway.vercel.sh/v1`）経由で接続。
 APIキーは1本で全プロバイダーにルーティングされる。
 
+## テスト
+
+- **フレームワーク**: Vitest
+- **テスト配置**: `src/**/__tests__/*.test.ts`
+- **ビルド除外**: `tsconfig.json` で `__tests__` を exclude（dist に含まれない）
+- **API モック**: gateway モジュールを `vi.mock` でモック。実際の API 呼び出しは行わない
+
+## CI/CD
+
+- **CI** (`ci.yml`): push/PR で type-check, lint, format:check, test, build を実行
+- **Release** (`release.yml`): main に changeset 付きで push すると自動で CHANGELOG 更新・バージョンバンプ・npm publish
+
+### リリースフロー
+
+1. changeset ファイルを `.changeset/` に作成（`pnpm changeset` は非対応、ファイルを直接作成）
+2. main に push
+3. GitHub Actions が自動処理: changeset version → コミット & push → npm publish
+
 ## 技術スタック
 
 - TypeScript (ESM, NodeNext, strict)
 - @modelcontextprotocol/sdk
-- Vercel AI SDK (ai, @ai-sdk/openai, @ai-sdk/anthropic, @ai-sdk/google)
-- zod
+- Vercel AI SDK (`ai` パッケージの `gateway` プロバイダー)
+- zod v4
+- Vitest
+- Changesets

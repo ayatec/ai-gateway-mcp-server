@@ -1,5 +1,9 @@
 # AI Gateway MCP Server
 
+[![npm version](https://img.shields.io/npm/v/@ayatec/ai-gateway-mcp-server)](https://www.npmjs.com/package/@ayatec/ai-gateway-mcp-server)
+[![CI](https://github.com/ayatec/ai-gateway-mcp-server/actions/workflows/ci.yml/badge.svg)](https://github.com/ayatec/ai-gateway-mcp-server/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Vercel AI Gateway を通じて複数の AI プロバイダー・モデルに統一的にアクセスできる MCP サーバー。
 Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つのツールを提供します。
 
@@ -14,7 +18,7 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 | `question`   | string | Yes  | -                | 質問内容           |
 | `model`      | string | No   | `openai/gpt-5.2` | モデル ID          |
 | `context`    | string | No   | -                | 追加コンテキスト   |
-| `max_tokens` | number | No   | `2000`           | 最大出力トークン数 |
+| `max_tokens` | number | No   | `4000`           | 最大出力トークン数 |
 
 ### `search` -- Web 検索
 
@@ -24,27 +28,27 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 | ------------ | ------ | ---- | ------------------ | ------------------ |
 | `query`      | string | Yes  | -                  | 検索クエリ         |
 | `model`      | string | No   | `perplexity/sonar` | 検索対応モデル ID  |
-| `max_tokens` | number | No   | モデル依存         | 最大出力トークン数 |
+| `max_tokens` | number | No   | `2000`             | 最大出力トークン数 |
 
 ### `research` -- マルチモデル調査・比較
 
-複数モデルに並列クエリし、結果を統合または比較表示します。旧 `compare` ツールの機能を統合。
+複数モデルに並列クエリし、結果を統合または比較表示します。
 
-| パラメータ             | 型       | 必須 | デフォルト               | 説明                                                |
-| ---------------------- | -------- | ---- | ------------------------ | --------------------------------------------------- |
-| `query`                | string   | Yes  | -                        | 調査クエリ                                          |
-| `mode`                 | string   | No   | `search`                 | `search`（Web 検索）または `ask`（Q&A）             |
-| `models`               | string[] | No   | mode に応じた 3-4 モデル | 2~4 モデル ID の配列                                |
-| `synthesize`           | boolean  | No   | `true`                   | `true`: 統合回答、`false`: 各モデルの回答を並列表示 |
-| `synthesis_model`      | string   | No   | `openai/gpt-5.2`         | 統合に使うモデル（`synthesize:true` 時のみ）        |
-| `max_tokens`           | number   | No   | `1000`                   | 各モデルの最大出力トークン数                        |
-| `synthesis_max_tokens` | number   | No   | `max_tokens * 3`         | 統合の最大出力トークン数                            |
+| パラメータ             | 型       | 必須 | デフォルト                         | 説明                                                |
+| ---------------------- | -------- | ---- | ---------------------------------- | --------------------------------------------------- |
+| `query`                | string   | Yes  | -                                  | 調査クエリ                                          |
+| `mode`                 | string   | No   | `search`                           | `search`（Web 検索）または `ask`（Q&A）             |
+| `models`               | string[] | No   | mode に応じた 4 モデル             | 2~4 モデル ID の配列                                |
+| `synthesize`           | boolean  | No   | `true`                             | `true`: 統合回答、`false`: 各モデルの回答を並列表示 |
+| `synthesis_model`      | string   | No   | `openai/gpt-5.2`                   | 統合に使うモデル（`synthesize:true` 時のみ）        |
+| `max_tokens`           | number   | No   | search: `2000` / ask: `4000`       | 各モデルの最大出力トークン数                        |
+| `synthesis_max_tokens` | number   | No   | search: `max_tokens×3` / ask: `×2` | 統合の最大出力トークン数                            |
 
 **処理フロー:**
 
 1. **Query Stage**: 指定（またはデフォルト）モデルに並列リクエスト
    - `search` デフォルト: `perplexity/sonar`, `gemini-3-flash`, `claude-haiku-4.5`, `gpt-5-mini`
-   - `ask` デフォルト: `gpt-5.2`, `claude-sonnet-4.6`, `gemini-3-flash`
+   - `ask` デフォルト: `gpt-5.2`, `claude-opus-4.6`, `gemini-3.1-pro-preview`, `sonar-reasoning-pro`
 2. **Synthesis Stage** (`synthesize:true`): `openai/gpt-5.2` が全結果を精査・統合し、矛盾点を指摘、ソースを明記
 3. **Comparison** (`synthesize:false`): 各モデルの回答をコスト・レイテンシ付きで並列表示
 
@@ -79,10 +83,10 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 
 ### Google
 
-| モデル ID                     | 入力  | 出力   | 検索 | 特徴       |
-| ----------------------------- | ----- | ------ | ---- | ---------- |
-| `google/gemini-3-flash`       | $0.50 | $3.00  | Yes  | コスパ最強 |
-| `google/gemini-3-pro-preview` | $2.00 | $12.00 | Yes  | 高性能     |
+| モデル ID                       | 入力  | 出力   | 検索 | 特徴       |
+| ------------------------------- | ----- | ------ | ---- | ---------- |
+| `google/gemini-3-flash`         | $0.50 | $3.00  | Yes  | コスパ最強 |
+| `google/gemini-3.1-pro-preview` | $2.00 | $12.00 | Yes  | 高性能     |
 
 ### Perplexity
 
@@ -91,6 +95,7 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 | `perplexity/sonar`               | $1.00 | $1.00  | Yes  | ネイティブ検索、search デフォルト |
 | `perplexity/sonar-pro`           | $3.00 | $15.00 | Yes  | 高精度検索                        |
 | `perplexity/sonar-reasoning-pro` | $2.00 | $8.00  | Yes  | 推論+高精度検索                   |
+| `perplexity/sonar-deep-research` | $2.00 | $8.00  | Yes  | エージェント型マルチ検索調査      |
 
 > 価格は 1M トークンあたり（USD）
 
@@ -100,40 +105,24 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 
 [Vercel AI Gateway](https://vercel.com/ai-gateway) の API キーを取得し、設定します。
 
-```bash
-cp .env.example .env
-# .env を編集して API キーを設定
-```
+### 2. MCP 設定
 
-```
-AI_GATEWAY_API_KEY=your-api-key-here
-```
+#### npx で使う場合（推奨）
 
-### 2. インストールとビルド
+##### Claude Code
 
 ```bash
-pnpm install
-pnpm build
+claude mcp add ai-gateway npx @ayatec/ai-gateway-mcp-server -e AI_GATEWAY_API_KEY=your-key
 ```
 
-### 3. MCP 設定
-
-#### Claude Code
-
-```bash
-claude mcp add ai-gateway node /path/to/ai-gateway-mcp-server/dist/index.js
-```
-
-#### Claude Desktop / その他の MCP クライアント
-
-MCP 設定ファイルに以下を追加:
+##### Claude Desktop / その他の MCP クライアント
 
 ```json
 {
   "mcpServers": {
     "ai-gateway": {
-      "command": "node",
-      "args": ["/path/to/ai-gateway-mcp-server/dist/index.js"],
+      "command": "npx",
+      "args": ["@ayatec/ai-gateway-mcp-server"],
       "env": {
         "AI_GATEWAY_API_KEY": "your-key"
       }
@@ -142,7 +131,39 @@ MCP 設定ファイルに以下を追加:
 }
 ```
 
-## ローカルテスト
+#### ローカルビルドで使う場合
+
+```bash
+git clone https://github.com/ayatec/ai-gateway-mcp-server.git
+cd ai-gateway-mcp-server
+pnpm install
+pnpm build
+```
+
+```bash
+claude mcp add ai-gateway node /path/to/ai-gateway-mcp-server/dist/index.js -e AI_GATEWAY_API_KEY=your-key
+```
+
+## 開発
+
+### コマンド
+
+```bash
+pnpm install        # 依存パッケージインストール
+pnpm build          # ビルド
+pnpm dev            # ウォッチモードでビルド
+pnpm start          # サーバー起動（ビルド後）
+pnpm dev:tool       # ツールの手動テスト
+pnpm test           # テスト実行
+pnpm test:watch     # テスト（ウォッチモード）
+pnpm type-check     # 型チェック
+pnpm lint           # ESLint実行
+pnpm lint:fix       # ESLint自動修正
+pnpm format         # Prettier実行
+pnpm format:check   # フォーマットチェック
+```
+
+### ローカルテスト
 
 `pnpm dev:tool` で各ツールを個別にテストできます。
 
@@ -156,7 +177,7 @@ pnpm dev:tool ask --question "Rustとは？" --model "anthropic/claude-sonnet-4.
 # search（デフォルト: perplexity/sonar）
 pnpm dev:tool search --query "Vercel AI SDK 最新情報"
 
-# research（3モデル並列検索→統合、デフォルト）
+# research（4モデル並列検索→統合、デフォルト）
 pnpm dev:tool research --query "WebAssemblyの現状と将来"
 
 # research（askモード、比較表示）
@@ -171,12 +192,21 @@ pnpm dev:tool list_models --provider openai
 pnpm dev:tool list_models --capability search
 ```
 
+### リリース
+
+[Changesets](https://github.com/changesets/changesets) でバージョン管理しています。
+
+1. changeset ファイルを作成して main に push
+2. GitHub Actions が自動で CHANGELOG 更新・バージョンバンプ・npm publish
+
 ## 技術スタック
 
-- **TypeScript** (ESM)
+- **TypeScript** (ESM, NodeNext, strict)
 - **[Vercel AI SDK](https://ai-sdk.dev/)** -- `gateway` プロバイダーで全モデルに統一アクセス
 - **[MCP SDK](https://modelcontextprotocol.io/)** -- Model Context Protocol サーバー実装
 - **[Zod](https://zod.dev/)** -- スキーマバリデーション
+- **[Vitest](https://vitest.dev/)** -- テスト
+- **[Changesets](https://github.com/changesets/changesets)** -- バージョン管理・CHANGELOG 自動生成
 
 ## ライセンス
 
