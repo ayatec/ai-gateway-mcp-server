@@ -15,7 +15,7 @@ export type ModelId =
   | 'anthropic/claude-haiku-4.5'
   // Google
   | 'google/gemini-3-flash'
-  | 'google/gemini-3-pro-preview'
+  | 'google/gemini-3.1-pro-preview'
   // Perplexity
   | 'perplexity/sonar'
   | 'perplexity/sonar-pro'

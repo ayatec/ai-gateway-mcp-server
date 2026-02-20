@@ -137,9 +137,9 @@ const models: ModelDefinition[] = [
     note: 'コスパ最強',
   },
   {
-    id: 'google/gemini-3-pro-preview',
+    id: 'google/gemini-3.1-pro-preview',
     provider: 'google',
-    displayName: 'Gemini 3 Pro Preview',
+    displayName: 'Gemini 3.1 Pro Preview',
     contextWindow: 1_000_000,
     capabilities: { search: true, reasoning: true, coding: true, fast: false, cheap: false },
     pricing: { input: 2.0, cachedInput: 0.5, output: 12.0 },
@@ -148,9 +148,9 @@ const models: ModelDefinition[] = [
       costPerRequest: 0.014,
       description: '$0.014/クエリ、inputトークン膨張なし、無料枠5,000/月',
     },
-    maxOutputTokens: 16384,
-    releasedAt: '2025-06-30',
-    note: '高性能',
+    maxOutputTokens: 65536,
+    releasedAt: '2026-02-19',
+    note: '高性能、Gemini 3 Proの後継',
   },
   // --- Perplexity ---
   {

@@ -18,7 +18,7 @@ const DEFAULT_SEARCH_MODELS: ModelId[] = [
 const DEFAULT_ASK_MODELS: ModelId[] = [
   'openai/gpt-5.2',
   'anthropic/claude-opus-4.6',
-  'google/gemini-3-pro-preview',
+  'google/gemini-3.1-pro-preview',
   'perplexity/sonar-reasoning-pro',
 ];
 const DEFAULT_SYNTHESIS_MODEL: ModelId = 'openai/gpt-5.2';
@@ -40,7 +40,7 @@ export const researchSchema = z.object({
     .max(4)
     .optional()
     .describe(
-      '2-4 models to query in parallel. Defaults depend on mode — search: [perplexity/sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini] (cost-effective, diversity-focused). ask: [gpt-5.2, claude-opus-4.6, gemini-3-pro-preview, sonar-reasoning-pro] (high-capability reasoning models from 4 providers)',
+      '2-4 models to query in parallel. Defaults depend on mode — search: [perplexity/sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini] (cost-effective, diversity-focused). ask: [gpt-5.2, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro] (high-capability reasoning models from 4 providers)',
     ),
   synthesize: z
     .boolean()
