@@ -1,5 +1,11 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.2.1
+
+### Patch Changes
+
+- [`88cfb30`](https://github.com/ayatec/ai-gateway-mcp-server/commit/88cfb3028dcd9e490da2dbd34bff460f6457d68c) Thanks [@ayatec](https://github.com/ayatec)! - CI/CDワークフローを統合し、CIパス後にのみリリースが実行されるよう改善
+
 ## 0.2.0
 
 ### Minor Changes
