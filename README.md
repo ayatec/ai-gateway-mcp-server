@@ -24,11 +24,11 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 
 検索対応モデルを使って最新情報を取得します。
 
-| パラメータ   | 型     | 必須 | デフォルト         | 説明               |
-| ------------ | ------ | ---- | ------------------ | ------------------ |
-| `query`      | string | Yes  | -                  | 検索クエリ         |
-| `model`      | string | No   | `perplexity/sonar` | 検索対応モデル ID  |
-| `max_tokens` | number | No   | `2000`             | 最大出力トークン数 |
+| パラメータ   | 型     | 必須 | デフォルト              | 説明               |
+| ------------ | ------ | ---- | ----------------------- | ------------------ |
+| `query`      | string | Yes  | -                       | 検索クエリ         |
+| `model`      | string | No   | `google/gemini-3-flash` | 検索対応モデル ID  |
+| `max_tokens` | number | No   | `2000`                  | 最大出力トークン数 |
 
 ### `research` -- マルチモデル調査・比較
 
@@ -65,37 +65,37 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 
 ### OpenAI
 
-| モデル ID              | 入力  | 出力   | 検索 | 特徴                           |
-| ---------------------- | ----- | ------ | ---- | ------------------------------ |
-| `openai/gpt-5.2`       | $1.75 | $14.00 | Yes  | フラッグシップ、ask デフォルト |
-| `openai/gpt-5.2-codex` | $1.75 | $14.00 | Yes  | コード特化                     |
-| `openai/gpt-5-mini`    | $0.25 | $2.00  | Yes  | バランス型                     |
-| `openai/gpt-5-nano`    | $0.05 | $0.40  | No   | 最安                           |
-| `openai/gpt-oss-120b`  | $0.10 | $0.50  | No   | OSS                            |
+| モデル ID              | 入力  | 出力   | 検索 | 特徴                             |
+| ---------------------- | ----- | ------ | ---- | -------------------------------- |
+| `openai/gpt-5.2`       | $1.75 | $14.00 | Yes  | OpenAI 最上位、ask デフォルト    |
+| `openai/gpt-5.2-codex` | $1.75 | $14.00 | Yes  | コード生成・解析特化             |
+| `openai/gpt-5-mini`    | $0.25 | $2.00  | Yes  | 軽量汎用、推論・検索・コード対応 |
+| `openai/gpt-5-nano`    | $0.05 | $0.40  | No   | 最軽量、生成専用                 |
+| `openai/gpt-oss-120b`  | $0.10 | $0.50  | No   | オープンウェイト 120B            |
 
 ### Anthropic
 
-| モデル ID                     | 入力  | 出力   | 検索 | 特徴       |
-| ----------------------------- | ----- | ------ | ---- | ---------- |
-| `anthropic/claude-opus-4.6`   | $5.00 | $25.00 | Yes  | 最高性能   |
-| `anthropic/claude-sonnet-4.6` | $3.00 | $15.00 | Yes  | バランス型 |
-| `anthropic/claude-haiku-4.5`  | $1.00 | $5.00  | Yes  | 高速       |
+| モデル ID                     | 入力  | 出力   | 検索 | 特徴                              |
+| ----------------------------- | ----- | ------ | ---- | --------------------------------- |
+| `anthropic/claude-opus-4.6`   | $5.00 | $25.00 | Yes  | Anthropic 最上位、1M コンテキスト |
+| `anthropic/claude-sonnet-4.6` | $3.00 | $15.00 | Yes  | 中位汎用、1M コンテキスト         |
+| `anthropic/claude-haiku-4.5`  | $1.00 | $5.00  | Yes  | 低レイテンシ軽量                  |
 
 ### Google
 
-| モデル ID                       | 入力  | 出力   | 検索 | 特徴       |
-| ------------------------------- | ----- | ------ | ---- | ---------- |
-| `google/gemini-3-flash`         | $0.50 | $3.00  | Yes  | コスパ最強 |
-| `google/gemini-3.1-pro-preview` | $2.00 | $12.00 | Yes  | 高性能     |
+| モデル ID                       | 入力  | 出力   | 検索 | 特徴                                       |
+| ------------------------------- | ----- | ------ | ---- | ------------------------------------------ |
+| `google/gemini-3-flash`         | $0.50 | $3.00  | Yes  | Google Search grounding、search デフォルト |
+| `google/gemini-3.1-pro-preview` | $2.00 | $12.00 | Yes  | Google 上位、Gemini 3 Pro 後継             |
 
 ### Perplexity
 
-| モデル ID                        | 入力  | 出力   | 検索 | 特徴                              |
-| -------------------------------- | ----- | ------ | ---- | --------------------------------- |
-| `perplexity/sonar`               | $1.00 | $1.00  | Yes  | ネイティブ検索、search デフォルト |
-| `perplexity/sonar-pro`           | $3.00 | $15.00 | Yes  | 高精度検索                        |
-| `perplexity/sonar-reasoning-pro` | $2.00 | $8.00  | Yes  | 推論+高精度検索                   |
-| `perplexity/sonar-deep-research` | $2.00 | $8.00  | Yes  | エージェント型マルチ検索調査      |
+| モデル ID                        | 入力  | 出力   | 検索 | 特徴                             |
+| -------------------------------- | ----- | ------ | ---- | -------------------------------- |
+| `perplexity/sonar`               | $1.00 | $1.00  | Yes  | 検索ネイティブ、低レイテンシ     |
+| `perplexity/sonar-pro`           | $3.00 | $15.00 | Yes  | 高精度検索                       |
+| `perplexity/sonar-reasoning-pro` | $2.00 | $8.00  | Yes  | 推論+高精度検索                  |
+| `perplexity/sonar-deep-research` | $2.00 | $8.00  | Yes  | エージェント型マルチステップ調査 |
 
 > 価格は 1M トークンあたり（USD）
 
@@ -196,7 +196,7 @@ pnpm dev:tool ask --question "TypeScriptの利点は？"
 # ask（モデル指定）
 pnpm dev:tool ask --question "Rustとは？" --model "anthropic/claude-sonnet-4.6"
 
-# search（デフォルト: perplexity/sonar）
+# search（デフォルト: google/gemini-3-flash）
 pnpm dev:tool search --query "Vercel AI SDK 最新情報"
 
 # research（4モデル並列検索→統合、デフォルト）

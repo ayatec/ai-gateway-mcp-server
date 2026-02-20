@@ -16,7 +16,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 128000,
     releasedAt: '2025-12-11',
-    note: 'フラッグシップ、askデフォルト',
+    note: 'OpenAI最上位、askデフォルト',
   },
   {
     id: 'openai/gpt-5.2-codex',
@@ -46,7 +46,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 128000,
     releasedAt: '2025-08-07',
-    note: 'バランス型',
+    note: '軽量汎用、推論・検索・コード対応',
   },
   {
     id: 'openai/gpt-5-nano',
@@ -57,7 +57,7 @@ const models: ModelDefinition[] = [
     pricing: { input: 0.05, cachedInput: 0.0125, output: 0.4 },
     maxOutputTokens: 128000,
     releasedAt: '2025-08-07',
-    note: '最安',
+    note: '最軽量、生成専用',
   },
   {
     id: 'openai/gpt-oss-120b',
@@ -85,7 +85,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 128000,
     releasedAt: '2026-02-05',
-    note: '最高性能',
+    note: 'Anthropic最上位、1Mコンテキスト',
   },
   {
     id: 'anthropic/claude-sonnet-4.6',
@@ -101,7 +101,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 128000,
     releasedAt: '2026-02-17',
-    note: 'バランス型',
+    note: '中位汎用、1Mコンテキスト',
   },
   {
     id: 'anthropic/claude-haiku-4.5',
@@ -117,7 +117,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 64000,
     releasedAt: '2025-10-15',
-    note: '高速',
+    note: '低レイテンシ軽量',
   },
   // --- Google ---
   {
@@ -134,7 +134,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 8192,
     releasedAt: '2025-12-17',
-    note: 'コスパ最強',
+    note: 'Google Search grounding対応、1Mコンテキスト、searchデフォルト',
   },
   {
     id: 'google/gemini-3.1-pro-preview',
@@ -150,7 +150,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 65536,
     releasedAt: '2026-02-19',
-    note: '高性能、Gemini 3 Proの後継',
+    note: 'Google上位、Gemini 3 Proの後継',
   },
   // --- Perplexity ---
   {
@@ -167,7 +167,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 16384,
     releasedAt: '2025-01-21',
-    note: 'ネイティブ検索、searchデフォルト',
+    note: '検索ネイティブ、低レイテンシ',
   },
   {
     id: 'perplexity/sonar-pro',

@@ -18,7 +18,7 @@ describe('search', () => {
     it('query のみでデフォルト値が適用される', () => {
       const result = searchSchema.parse({ query: 'test query' });
       expect(result.query).toBe('test query');
-      expect(result.model).toBe('perplexity/sonar');
+      expect(result.model).toBe('google/gemini-3-flash');
       expect(result.max_tokens).toBe(2000);
     });
 

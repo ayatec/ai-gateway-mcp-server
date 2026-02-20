@@ -13,7 +13,7 @@ export const searchSchema = z.object({
   model: z
     .string()
     .optional()
-    .default('perplexity/sonar')
+    .default('google/gemini-3-flash')
     .describe(
       "Search-capable model, e.g. 'perplexity/sonar-pro', 'google/gemini-3-flash'. Must support web search",
     ),
@@ -75,6 +75,6 @@ export async function searchHandler(
 export const searchTool = {
   name: 'search',
   description:
-    'Quick web search with a single model. For multi-source research, use the research tool instead. Default: perplexity/sonar (search-native, $1/$1, no input inflation). For higher quality: perplexity/sonar-pro. Also supports openai/anthropic/google native search.',
+    'Quick web search with a single model. For multi-source research, use the research tool instead. Default: google/gemini-3-flash (Google Search grounding, $0.50/$3.00, no input inflation). For higher quality: perplexity/sonar-pro. Also supports openai/anthropic/perplexity native search.',
   paramsSchema: searchSchema.shape,
 };
