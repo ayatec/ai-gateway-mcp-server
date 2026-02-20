@@ -37,9 +37,11 @@ scripts/
 
 ### 提供ツール
 
-1. **ask** — AIに質問（デフォルト: openai/gpt-5.2）
+1. **ask** — 単一モデルへの質問（デフォルト: openai/gpt-5.2）。複数視点が必要ならresearch mode:ask synthesize:falseを推奨
 2. **search** — Web検索（デフォルト: perplexity/sonar）
 3. **research** — 複数モデル並列調査（ask/searchモード、synthesize on/off、2-4モデル）
+   - searchモード: コスト重視の4モデル（sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini）
+   - askモード: 高性能4モデル（gpt-5.2, claude-opus-4.6, gemini-3-pro-preview, sonar-reasoning-pro）
 4. **list_models** — モデル一覧（provider/capabilityフィルタ対応）
 
 ### 対応プロバイダー・モデル（13モデル）
