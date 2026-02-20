@@ -14,7 +14,8 @@ const models: ModelDefinition[] = [
       type: 'token_based',
       description: '検索結果がinputトークンに含まれる（膨張大）',
     },
-    maxOutputTokens: 32768,
+    maxOutputTokens: 128000,
+    releasedAt: '2025-12-11',
     note: 'フラッグシップ、askデフォルト',
   },
   {
@@ -28,7 +29,8 @@ const models: ModelDefinition[] = [
       type: 'token_based',
       description: '検索結果がinputトークンに含まれる（膨張大）',
     },
-    maxOutputTokens: 32768,
+    maxOutputTokens: 128000,
+    releasedAt: '2026-01-14',
     note: 'コード特化',
   },
   {
@@ -42,7 +44,8 @@ const models: ModelDefinition[] = [
       type: 'token_based',
       description: '検索結果がinputトークンに含まれる（膨張大）',
     },
-    maxOutputTokens: 32768,
+    maxOutputTokens: 128000,
+    releasedAt: '2025-08-07',
     note: 'バランス型',
   },
   {
@@ -52,7 +55,8 @@ const models: ModelDefinition[] = [
     contextWindow: 400_000,
     capabilities: { search: false, reasoning: false, coding: false, fast: true, cheap: true },
     pricing: { input: 0.05, cachedInput: 0.0125, output: 0.4 },
-    maxOutputTokens: 16384,
+    maxOutputTokens: 128000,
+    releasedAt: '2025-08-07',
     note: '最安',
   },
   {
@@ -63,6 +67,7 @@ const models: ModelDefinition[] = [
     capabilities: { search: false, reasoning: true, coding: true, fast: true, cheap: true },
     pricing: { input: 0.1, cachedInput: 0.025, output: 0.5 },
     maxOutputTokens: 32768,
+    releasedAt: '2025-08-05',
     note: 'OSS、検索非対応',
   },
   // --- Anthropic ---
@@ -78,7 +83,8 @@ const models: ModelDefinition[] = [
       costPerRequest: 0.01,
       description: '$0.01/検索 + 検索結果がinputに含まれる（Dynamic Filtering）',
     },
-    maxOutputTokens: 32000,
+    maxOutputTokens: 128000,
+    releasedAt: '2026-02-05',
     note: '最高性能',
   },
   {
@@ -93,7 +99,8 @@ const models: ModelDefinition[] = [
       costPerRequest: 0.01,
       description: '$0.01/検索 + 検索結果がinputに含まれる（Dynamic Filtering）',
     },
-    maxOutputTokens: 16000,
+    maxOutputTokens: 128000,
+    releasedAt: '2026-02-17',
     note: 'バランス型',
   },
   {
@@ -108,7 +115,8 @@ const models: ModelDefinition[] = [
       costPerRequest: 0.01,
       description: '$0.01/検索 + 検索結果がinputに含まれる（Dynamic Filtering）',
     },
-    maxOutputTokens: 8192,
+    maxOutputTokens: 64000,
+    releasedAt: '2025-10-15',
     note: '高速',
   },
   // --- Google ---
@@ -125,6 +133,7 @@ const models: ModelDefinition[] = [
       description: '$0.014/クエリ、inputトークン膨張なし、無料枠5,000/月',
     },
     maxOutputTokens: 8192,
+    releasedAt: '2025-12-17',
     note: 'コスパ最強',
   },
   {
@@ -140,6 +149,7 @@ const models: ModelDefinition[] = [
       description: '$0.014/クエリ、inputトークン膨張なし、無料枠5,000/月',
     },
     maxOutputTokens: 16384,
+    releasedAt: '2025-06-30',
     note: '高性能',
   },
   // --- Perplexity ---
@@ -156,6 +166,7 @@ const models: ModelDefinition[] = [
       description: '$0.005/検索リクエスト、inputトークン膨張なし',
     },
     maxOutputTokens: 16384,
+    releasedAt: '2025-01-21',
     note: 'ネイティブ検索、searchデフォルト',
   },
   {
@@ -171,6 +182,7 @@ const models: ModelDefinition[] = [
       description: '$0.005/検索リクエスト（最大5回の内部検索）、inputトークン膨張なし',
     },
     maxOutputTokens: 16384,
+    releasedAt: '2025-01-21',
     note: '高精度検索',
   },
   {
@@ -186,6 +198,7 @@ const models: ModelDefinition[] = [
       description: '$0.005/検索リクエスト（最大5回の内部検索）、inputトークン膨張なし',
     },
     maxOutputTokens: 16384,
+    releasedAt: '2025-03-07',
     note: '推論+高精度検索',
   },
 ];

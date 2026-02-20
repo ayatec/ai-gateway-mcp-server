@@ -57,6 +57,7 @@ export interface ModelDefinition {
   pricing: ModelPricing;
   searchCost?: SearchCostInfo;
   maxOutputTokens?: number;
+  releasedAt?: string;
   note?: string;
 }
 

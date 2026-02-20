@@ -47,6 +47,10 @@ function formatModel(m: ModelDefinition): string {
     lines.push(`- **Max output**: ${m.maxOutputTokens.toLocaleString()} tokens`);
   }
 
+  if (m.releasedAt) {
+    lines.push(`- **Released**: ${m.releasedAt}`);
+  }
+
   if (m.note) {
     lines.push(`- **Note**: ${m.note}`);
   }
