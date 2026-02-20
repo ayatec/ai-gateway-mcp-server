@@ -44,7 +44,7 @@ scripts/
 ### 提供ツール
 
 1. **ask** — 単一モデルへの質問（デフォルト: openai/gpt-5.2）。複数視点が必要ならresearch mode:ask synthesize:falseを推奨
-2. **search** — Web検索（デフォルト: perplexity/sonar）
+2. **search** — Web検索（デフォルト: google/gemini-3-flash）
 3. **research** — 複数モデル並列調査（ask/searchモード、synthesize on/off、2-4モデル）
    - searchモード: コスト重視の4モデル（sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini）
    - askモード: 高性能4モデル（gpt-5.2, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro）
@@ -83,6 +83,12 @@ APIキーは1本で全プロバイダーにルーティングされる。
 1. changeset ファイルを `.changeset/` に作成（`pnpm changeset` は非対応、ファイルを直接作成）
 2. main に push
 3. GitHub Actions が自動処理: changeset version → コミット & push → npm publish
+
+### Changeset 運用ルール
+
+- **機能変更時は必ず changeset を作成する**（バグ修正・機能追加・破壊的変更など）
+- ドキュメントのみの変更や CI 設定変更など、npm パッケージに影響しない変更では不要
+- セマンティックバージョニング: `patch`（バグ修正）、`minor`（機能追加・変更）、`major`（破壊的変更）
 
 ## 技術スタック
 
