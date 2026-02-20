@@ -17,8 +17,9 @@ const DEFAULT_SEARCH_MODELS: ModelId[] = [
 ];
 const DEFAULT_ASK_MODELS: ModelId[] = [
   'openai/gpt-5.2',
-  'anthropic/claude-sonnet-4.6',
-  'google/gemini-3-flash',
+  'anthropic/claude-opus-4.6',
+  'google/gemini-3-pro-preview',
+  'perplexity/sonar-reasoning-pro',
 ];
 const DEFAULT_SYNTHESIS_MODEL: ModelId = 'openai/gpt-5.2';
 
@@ -30,14 +31,16 @@ export const researchSchema = z.object({
   mode: z
     .enum(['ask', 'search'])
     .default('search')
-    .describe("'search': web search with grounding (default). 'ask': Q&A without web search"),
+    .describe(
+      'search: web research with grounding (default). ask: multi-model Q&A without web search, ideal for getting diverse perspectives on a question',
+    ),
   models: z
     .array(z.string())
     .min(2)
     .max(4)
     .optional()
     .describe(
-      '2-4 models to query. Default for search: [perplexity/sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini]. Default for ask: [gpt-5.2, claude-sonnet-4.6, gemini-3-flash]',
+      '2-4 models to query in parallel. Defaults depend on mode — search: [perplexity/sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini] (cost-effective, diversity-focused). ask: [gpt-5.2, claude-opus-4.6, gemini-3-pro-preview, sonar-reasoning-pro] (high-capability reasoning models from 4 providers)',
     ),
   synthesize: z
     .boolean()
@@ -56,16 +59,17 @@ export const researchSchema = z.object({
     .int()
     .positive()
     .optional()
-    .default(2000)
     .describe(
-      'Max output tokens per model in query phase (default: 2000). Total fed to synthesis = models x max_tokens. Reasoning models use tokens for internal thinking, so their visible output may be shorter',
+      'Max output tokens per model in query phase (default: search=2000, ask=4000). Total fed to synthesis = models × max_tokens. Reasoning models use tokens for internal thinking, so their visible output may be shorter',
     ),
   synthesis_max_tokens: z
     .number()
     .int()
     .positive()
     .optional()
-    .describe('Max output tokens for synthesis. Defaults to triple max_tokens'),
+    .describe(
+      'Max output tokens for synthesis. Defaults to max_tokens × multiplier (search: ×3, ask: ×2)',
+    ),
 });
 
 export async function researchHandler(
@@ -74,8 +78,9 @@ export async function researchHandler(
 ): Promise<ToolResponse> {
   const useSearch = args.mode === 'search';
 
-  // モデル解決: 未指定ならmodeに応じたデフォルト
+  // モード別デフォルト解決
   const modelIds = args.models ?? (useSearch ? DEFAULT_SEARCH_MODELS : DEFAULT_ASK_MODELS);
+  const maxTokens = args.max_tokens ?? (useSearch ? 2000 : 4000);
 
   // モデルIDバリデーション
   const invalidModels = modelIds.filter((m) => !isValidModelId(m));
@@ -119,7 +124,7 @@ export async function researchHandler(
       modelId: modelId as ModelId,
       prompt: args.query,
       system,
-      maxTokens: args.max_tokens,
+      maxTokens,
       useSearch,
     })),
   );
@@ -162,8 +167,9 @@ export async function researchHandler(
     };
   }
 
-  // 4モデル×2000=8000トークンの統合には3倍をデフォルトに
-  const synthesisMaxTokens = args.synthesis_max_tokens ?? args.max_tokens * 3;
+  // synthesis倍率: searchモード×3、askモード×2
+  const synthesisMult = useSearch ? 3 : 2;
+  const synthesisMaxTokens = args.synthesis_max_tokens ?? maxTokens * synthesisMult;
 
   const synthesisPrompt =
     `The following are responses about "${args.query}" from ${modelIds.length} different AI models:\n\n` +
@@ -191,6 +197,6 @@ export async function researchHandler(
 export const researchTool = {
   name: 'research',
   description:
-    'Multi-model research tool. Queries multiple AI models in parallel, then optionally synthesizes results into a unified answer. mode:search for web research (default), mode:ask for Q&A. synthesize:true (default) merges all results via a high-performance model; synthesize:false shows responses side by side for comparison.',
+    'Multi-model parallel research. Queries 2-4 AI models simultaneously for diverse perspectives, then optionally synthesizes results. mode:search (default): web research with grounding. mode:ask: multi-model Q&A without web search — ideal when you want multiple viewpoints on a question. synthesize:true (default): merges results via synthesis model. synthesize:false: shows each model response side by side with latency and pricing info.',
   paramsSchema: researchSchema.shape,
 };
