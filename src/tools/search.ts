@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { generate } from '../lib/gateway.js';
 import { isValidModelId, getSearchCapableModels } from '../lib/model-registry.js';
-import type { ModelId, ToolResponse } from '../types/index.js';
+import type { ModelId, Source, ToolResponse } from '../types/index.js';
 
 export const searchSchema = z.object({
   query: z
@@ -22,11 +22,33 @@ export const searchSchema = z.object({
     .int()
     .positive()
     .optional()
-    .default(2000)
     .describe(
-      'Max output tokens (default: 2000). 1000-2000 for quick lookups, 4000+ for comprehensive summaries. Reasoning models consume tokens internally, so set higher when using sonar-reasoning-pro',
+      'Max output tokens. If set, output is hard-truncated at this limit (may cut off mid-response). Omit to let the model decide output length naturally. Only set when you need strict cost control. Reasoning models consume tokens internally, so set 2x-3x higher than expected visible output',
+    ),
+  include_sources: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe(
+      'Include source URLs in the response. When true, appends a Sources section with links at the end',
     ),
 });
+
+/** ソース情報をMarkdown形式にフォーマット */
+export function formatSources(sources: Source[]): string {
+  const uniqueSources = sources.filter(
+    (s, i, arr) => s.url && arr.findIndex((x) => x.url === s.url) === i,
+  );
+  if (uniqueSources.length === 0) return '';
+
+  const lines = uniqueSources.map((s) => {
+    if (s.title && s.url) return `- [${s.title}](${s.url})`;
+    if (s.url) return `- ${s.url}`;
+    return `- ${s.title}`;
+  });
+
+  return `\n\n---\n\n**Sources**\n${lines.join('\n')}`;
+}
 
 export async function searchHandler(
   args: z.infer<typeof searchSchema>,
@@ -68,6 +90,15 @@ export async function searchHandler(
     maxTokens: args.max_tokens,
     useSearch: true,
   });
+
+  // ソース情報を付加
+  if (args.include_sources && result.sources?.length) {
+    const text = result.response.content[0]?.text ?? '';
+    const sourcesSection = formatSources(result.sources);
+    return {
+      content: [{ type: 'text', text: text + sourcesSection }],
+    };
+  }
 
   return result.response;
 }

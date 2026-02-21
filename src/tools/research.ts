@@ -7,6 +7,7 @@ import {
   getModel,
 } from '../lib/model-registry.js';
 import type { ModelId, ToolResponse } from '../types/index.js';
+import { formatSources } from './search.js';
 
 // modeごとのデフォルトモデル
 const DEFAULT_SEARCH_MODELS: ModelId[] = [
@@ -60,7 +61,7 @@ export const researchSchema = z.object({
     .positive()
     .optional()
     .describe(
-      'Max output tokens per model in query phase (default: search=2000, ask=4000). Total fed to synthesis = models × max_tokens. Reasoning models use tokens for internal thinking, so their visible output may be shorter',
+      'Max output tokens per model in query phase. If set, output is hard-truncated at this limit (may cut off mid-response). Omit to let models decide output length naturally. Only set when you need strict cost control. Reasoning models use tokens internally, so set 2x-3x higher than expected visible output',
     ),
   synthesis_max_tokens: z
     .number()
@@ -68,7 +69,14 @@ export const researchSchema = z.object({
     .positive()
     .optional()
     .describe(
-      'Max output tokens for synthesis. Defaults to max_tokens × multiplier (search: ×3, ask: ×2)',
+      'Max output tokens for synthesis. Omit to let the model decide naturally. Only set when you need strict cost control',
+    ),
+  include_sources: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe(
+      'Include source URLs in the response. When true, appends source links from search results. Only effective in search mode',
     ),
 });
 
@@ -80,7 +88,7 @@ export async function researchHandler(
 
   // モード別デフォルト解決
   const modelIds = args.models ?? (useSearch ? DEFAULT_SEARCH_MODELS : DEFAULT_ASK_MODELS);
-  const maxTokens = args.max_tokens ?? (useSearch ? 2000 : 4000);
+  const maxTokens = args.max_tokens;
 
   // モデルIDバリデーション
   const invalidModels = modelIds.filter((m) => !isValidModelId(m));
@@ -137,7 +145,9 @@ export async function researchHandler(
         const modelDef = getModel(r.modelId);
         const latency = `${(r.result.durationMs / 1000).toFixed(1)}s`;
         const cost = `$${modelDef.pricing.input}/$${modelDef.pricing.output} per 1M tokens`;
-        return `## ${r.modelId}\n**Latency**: ${latency} | **Pricing**: ${cost}\n\n${text}`;
+        const sourcesSection =
+          args.include_sources && r.result.sources?.length ? formatSources(r.result.sources) : '';
+        return `## ${r.modelId}\n**Latency**: ${latency} | **Pricing**: ${cost}\n\n${text}${sourcesSection}`;
       })
       .join('\n\n---\n\n');
 
@@ -167,9 +177,8 @@ export async function researchHandler(
     };
   }
 
-  // synthesis倍率: searchモード×3、askモード×2
-  const synthesisMult = useSearch ? 3 : 2;
-  const synthesisMaxTokens = args.synthesis_max_tokens ?? maxTokens * synthesisMult;
+  // synthesis_max_tokens: 明示指定があればそれを使用、なければ未指定（モデルに任せる）
+  const synthesisMaxTokens = args.synthesis_max_tokens;
 
   const synthesisPrompt =
     `The following are responses about "${args.query}" from ${modelIds.length} different AI models:\n\n` +
@@ -190,6 +199,18 @@ export async function researchHandler(
       'into accurate, comprehensive reports.',
     maxTokens: synthesisMaxTokens,
   });
+
+  // 統合レスポンスにソース情報を付加
+  if (args.include_sources) {
+    const allSources = results.flatMap((r) => r.result.sources ?? []);
+    if (allSources.length > 0) {
+      const text = synthesisResult.response.content[0]?.text ?? '';
+      const sourcesSection = formatSources(allSources);
+      return {
+        content: [{ type: 'text', text: text + sourcesSection }],
+      };
+    }
+  }
 
   return synthesisResult.response;
 }
