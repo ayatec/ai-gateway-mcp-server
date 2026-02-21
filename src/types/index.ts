@@ -62,6 +62,13 @@ export interface ModelDefinition {
   note?: string;
 }
 
+// 検索結果のソース情報
+export interface Source {
+  title?: string;
+  url?: string;
+  snippet?: string;
+}
+
 // MCP ツールレスポンス（MCP SDKのインデックスシグネチャ要件に対応）
 export interface ToolResponse {
   [key: string]: unknown;

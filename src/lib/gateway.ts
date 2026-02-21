@@ -1,15 +1,25 @@
-import { generateText } from 'ai';
+import { generateText, type GenerateTextResult } from 'ai';
 import { resolveModel, gateway } from '../providers/index.js';
-import { getModel } from './model-registry.js';
-import type { ModelId, ToolResponse } from '../types/index.js';
+import type { ModelId, Source, ToolResponse } from '../types/index.js';
+
+/** AI SDK の Source 型（GenerateTextResult.sources から推論） */
+type AISdkSource = GenerateTextResult<never, never>['sources'][number];
 
 /** 検索ツールを構築（Gateway の perplexitySearch を全プロバイダーで統一使用） */
 function buildSearchTools() {
   return { perplexity_search: gateway.tools.perplexitySearch() };
 }
 
-/** ツール結果から検索スニペットを抽出 */
-function extractSearchResults(steps: Array<Record<string, unknown>>): string | null {
+/** AI SDK の Source 型からプロジェクトの Source 型に変換 */
+function convertAISdkSources(sdkSources: AISdkSource[]): Source[] {
+  return sdkSources
+    .filter((s): s is AISdkSource & { sourceType: 'url' } => s.sourceType === 'url')
+    .map((s) => ({ title: s.title, url: s.url }));
+}
+
+/** ツール結果からソース情報を抽出（perplexitySearchツール経由のモデル用） */
+function extractSourcesFromToolResults(steps: Array<Record<string, unknown>>): Source[] {
+  const sources: Source[] = [];
   for (const step of steps) {
     const toolResults = step.toolResults as
       | Array<{ output?: { results?: Array<{ title?: string; url?: string; snippet?: string }> } }>
@@ -17,21 +27,59 @@ function extractSearchResults(steps: Array<Record<string, unknown>>): string | n
     if (!toolResults) continue;
     for (const tr of toolResults) {
       if (tr.output && Array.isArray(tr.output.results)) {
-        const formatted = tr.output.results
-          .map((r) => {
-            const parts: string[] = [];
-            if (r.title) parts.push(`**${r.title}**`);
-            if (r.url) parts.push(r.url);
-            if (r.snippet) parts.push(r.snippet);
-            return parts.join('\n');
-          })
-          .filter(Boolean)
-          .join('\n\n---\n\n');
-        if (formatted) return formatted;
+        for (const r of tr.output.results) {
+          if (r.url || r.title) {
+            sources.push({ title: r.title, url: r.url, snippet: r.snippet });
+          }
+        }
       }
     }
   }
-  return null;
+  return sources;
+}
+
+/**
+ * generateText 結果からソース情報を統合抽出
+ * - result.sources: AI SDK標準フィールド（Perplexity等のネイティブ検索プロバイダーが使用）
+ * - steps[].toolResults: perplexitySearchツール経由のモデル（Gemini, Claude, GPT等）が使用
+ */
+function collectSources(
+  sdkSources: AISdkSource[],
+  steps: Array<Record<string, unknown>>,
+): Source[] {
+  const fromSdk = convertAISdkSources(sdkSources);
+  const fromTools = extractSourcesFromToolResults(steps);
+
+  // 重複排除（URL基準）
+  const seen = new Set<string>();
+  const merged: Source[] = [];
+  for (const s of [...fromSdk, ...fromTools]) {
+    const key = s.url ?? s.title ?? '';
+    if (!seen.has(key)) {
+      seen.add(key);
+      merged.push(s);
+    }
+  }
+  return merged;
+}
+
+/** ツール結果から検索スニペットをフォーマット済み文字列として抽出 */
+function extractSearchResults(steps: Array<Record<string, unknown>>): string | null {
+  const sources = extractSourcesFromToolResults(steps);
+  if (sources.length === 0) return null;
+
+  const formatted = sources
+    .map((r) => {
+      const parts: string[] = [];
+      if (r.title) parts.push(`**${r.title}**`);
+      if (r.url) parts.push(r.url);
+      if (r.snippet) parts.push(r.snippet);
+      return parts.join('\n');
+    })
+    .filter(Boolean)
+    .join('\n\n---\n\n');
+
+  return formatted || null;
 }
 
 /** テキスト生成の共通オプション */
@@ -49,13 +97,13 @@ export interface GenerateResult {
   response: ToolResponse;
   durationMs: number;
   isError?: boolean;
+  /** 検索結果から抽出したソース情報（useSearch: true の場合のみ） */
+  sources?: Source[];
 }
 
 /** テキスト生成してMCPレスポンスを返す */
 export async function generate(options: GenerateOptions): Promise<GenerateResult> {
-  const modelDef = getModel(options.modelId);
   const model = resolveModel(options.modelId);
-  const maxTokens = options.maxTokens ?? modelDef.maxOutputTokens;
   const startTime = Date.now();
 
   try {
@@ -65,13 +113,19 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
       model,
       system: options.system,
       prompt: options.prompt,
-      maxOutputTokens: maxTokens,
+      ...(options.maxTokens ? { maxOutputTokens: options.maxTokens } : {}),
       tools,
       // ツール使用を強制し、モデルが検索をスキップするのを防ぐ
       ...(tools ? { toolChoice: 'required' as const } : {}),
     });
 
     let text = result.text;
+
+    // ソース情報を統合抽出（AI SDK標準フィールド + ツール結果）
+    const sources = collectSources(
+      result.sources ?? [],
+      (result.steps as Array<Record<string, unknown>>) ?? [],
+    );
 
     // provider-executed tool（perplexitySearch）では、Gateway が検索を実行し
     // ツール結果を返すが、モデルがテキスト生成せずに終了する（finishReason=tool-calls）
@@ -87,7 +141,7 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
           prompt:
             `Based on the following search results, answer the user's question: "${options.prompt}"\n\n` +
             `Search results:\n${searchResults}`,
-          maxOutputTokens: maxTokens,
+          ...(options.maxTokens ? { maxOutputTokens: options.maxTokens } : {}),
         });
         text = followUp.text;
       }
@@ -99,6 +153,7 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
     return {
       response: { content: [{ type: 'text', text }] },
       durationMs,
+      ...(sources.length > 0 ? { sources } : {}),
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : '不明なエラーが発生しました';
