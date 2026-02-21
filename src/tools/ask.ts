@@ -24,9 +24,8 @@ export const askSchema = z.object({
     .int()
     .positive()
     .optional()
-    .default(4000)
     .describe(
-      'Max output tokens (default: 4000). Guide: 500-1000 for short answers, 2000-4000 for explanations, 8000+ for detailed analysis. Reasoning models (e.g. sonar-reasoning-pro) use tokens internally for thinking, so set 2x-3x higher than expected output length',
+      'Max output tokens. If set, output is hard-truncated at this limit (may cut off mid-response). Omit to let the model decide output length naturally. Only set when you need strict cost control. Reasoning models use tokens internally, so set 2x-3x higher than expected visible output',
     ),
 });
 
