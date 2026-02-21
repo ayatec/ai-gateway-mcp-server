@@ -20,7 +20,7 @@ describe('ask', () => {
       const result = askSchema.parse({ question: 'test' });
       expect(result.question).toBe('test');
       expect(result.model).toBe('openai/gpt-5.2');
-      expect(result.max_tokens).toBe(4000);
+      expect(result.max_tokens).toBeUndefined();
       expect(result.context).toBeUndefined();
     });
 
@@ -50,7 +50,6 @@ describe('ask', () => {
       const result = await askHandler({
         question: 'test',
         model: 'invalid/model',
-        max_tokens: 4000,
       });
       expect(result.content[0].text).toContain('Unknown model');
       expect(result).toHaveProperty('isError', true);
@@ -65,14 +64,13 @@ describe('ask', () => {
       const result = await askHandler({
         question: 'What is TypeScript?',
         model: 'openai/gpt-5.2',
-        max_tokens: 4000,
       });
       expect(result.content[0].text).toBe('mocked answer');
       expect(mockGenerate).toHaveBeenCalledWith(
         expect.objectContaining({
           modelId: 'openai/gpt-5.2',
           prompt: 'What is TypeScript?',
-          maxTokens: 4000,
+          maxTokens: undefined,
         }),
       );
     });
@@ -87,7 +85,6 @@ describe('ask', () => {
         question: 'What does this do?',
         model: 'openai/gpt-5.2',
         context: 'const x = 1;',
-        max_tokens: 4000,
       });
       expect(mockGenerate).toHaveBeenCalledWith(
         expect.objectContaining({

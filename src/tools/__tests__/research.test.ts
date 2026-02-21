@@ -23,6 +23,7 @@ describe('research', () => {
       expect(result.mode).toBe('search');
       expect(result.synthesize).toBe(true);
       expect(result.models).toBeUndefined();
+      expect(result.include_sources).toBe(false);
     });
 
     it('全パラメータを指定できる', () => {
@@ -59,7 +60,6 @@ describe('research', () => {
         mode: 'ask',
         models: ['invalid/model', 'also/invalid'],
         synthesize: true,
-        max_tokens: 4000,
       });
       expect(result.content[0].text).toContain('Unknown models');
       expect(result).toHaveProperty('isError', true);
@@ -71,7 +71,6 @@ describe('research', () => {
         mode: 'search',
         models: ['openai/gpt-5-nano', 'perplexity/sonar'],
         synthesize: true,
-        max_tokens: 2000,
       });
       expect(result.content[0].text).toContain('do not support search');
       expect(result).toHaveProperty('isError', true);
@@ -100,7 +99,6 @@ describe('research', () => {
         mode: 'ask',
         models: ['openai/gpt-5.2', 'anthropic/claude-opus-4.6'],
         synthesize: false,
-        max_tokens: 4000,
       });
 
       const text = result.content[0].text;
@@ -140,13 +138,91 @@ describe('research', () => {
         mode: 'ask',
         models: ['openai/gpt-5.2', 'anthropic/claude-opus-4.6'],
         synthesize: true,
-        max_tokens: 4000,
       });
 
       expect(result.content[0].text).toBe('Synthesized answer');
       // 並列リクエスト + 統合リクエストが呼ばれる
       expect(mockGenerateParallel).toHaveBeenCalledTimes(1);
       expect(mockGenerate).toHaveBeenCalledTimes(1);
+    });
+
+    it('synthesize:false + include_sources:true でモデルごとにソースが付加される', async () => {
+      mockGenerateParallel.mockResolvedValue([
+        {
+          modelId: 'perplexity/sonar',
+          result: {
+            response: { content: [{ type: 'text', text: 'Sonar response' }] },
+            durationMs: 1000,
+            sources: [{ title: 'Source A', url: 'https://a.com', snippet: 'Snippet A' }],
+          },
+        },
+        {
+          modelId: 'google/gemini-3-flash',
+          result: {
+            response: { content: [{ type: 'text', text: 'Gemini response' }] },
+            durationMs: 800,
+            sources: [{ title: 'Source B', url: 'https://b.com', snippet: 'Snippet B' }],
+          },
+        },
+      ]);
+
+      const result = await researchHandler({
+        query: 'test query',
+        mode: 'search',
+        models: ['perplexity/sonar', 'google/gemini-3-flash'],
+        synthesize: false,
+        include_sources: true,
+      });
+
+      const text = result.content[0].text;
+      expect(text).toContain('[Source A](https://a.com)');
+      expect(text).toContain('[Source B](https://b.com)');
+    });
+
+    it('synthesize:true + include_sources:true で統合レスポンスにソースが付加される', async () => {
+      mockGenerateParallel.mockResolvedValue([
+        {
+          modelId: 'perplexity/sonar',
+          result: {
+            response: { content: [{ type: 'text', text: 'Response A' }] },
+            durationMs: 800,
+            sources: [{ title: 'Source A', url: 'https://a.com' }],
+          },
+        },
+        {
+          modelId: 'google/gemini-3-flash',
+          result: {
+            response: { content: [{ type: 'text', text: 'Response B' }] },
+            durationMs: 900,
+            sources: [
+              { title: 'Source B', url: 'https://b.com' },
+              { title: 'Source A Dup', url: 'https://a.com' },
+            ],
+          },
+        },
+      ]);
+
+      mockGenerate.mockResolvedValue({
+        response: { content: [{ type: 'text', text: 'Synthesized answer' }] },
+        durationMs: 500,
+      });
+
+      const result = await researchHandler({
+        query: 'test question',
+        mode: 'search',
+        models: ['perplexity/sonar', 'google/gemini-3-flash'],
+        synthesize: true,
+        include_sources: true,
+      });
+
+      const text = result.content[0].text;
+      expect(text).toContain('Synthesized answer');
+      expect(text).toContain('**Sources**');
+      expect(text).toContain('[Source A](https://a.com)');
+      expect(text).toContain('[Source B](https://b.com)');
+      // 重複URLは1回のみ
+      const aMatches = text.match(/https:\/\/a\.com/g);
+      expect(aMatches).toHaveLength(1);
     });
   });
 });
