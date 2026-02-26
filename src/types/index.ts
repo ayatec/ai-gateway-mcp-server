@@ -19,8 +19,7 @@ export type ModelId =
   // Perplexity
   | 'perplexity/sonar'
   | 'perplexity/sonar-pro'
-  | 'perplexity/sonar-reasoning-pro'
-  | 'perplexity/sonar-deep-research';
+  | 'perplexity/sonar-reasoning-pro';
 
 // モデル能力
 export interface ModelCapabilities {
