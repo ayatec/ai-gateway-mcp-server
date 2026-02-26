@@ -13,36 +13,36 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 
 任意のモデルに質問を送り、回答を得ます。
 
-| パラメータ   | 型     | 必須 | デフォルト       | 説明               |
-| ------------ | ------ | ---- | ---------------- | ------------------ |
-| `question`   | string | Yes  | -                | 質問内容           |
-| `model`      | string | No   | `openai/gpt-5.2` | モデル ID          |
-| `context`    | string | No   | -                | 追加コンテキスト   |
-| `max_tokens` | number | No   | `4000`           | 最大出力トークン数 |
+| パラメータ   | 型     | 必須 | デフォルト       | 説明                                     |
+| ------------ | ------ | ---- | ---------------- | ---------------------------------------- |
+| `question`   | string | Yes  | -                | 質問内容                                 |
+| `model`      | string | No   | `openai/gpt-5.2` | モデル ID                                |
+| `context`    | string | No   | -                | 追加コンテキスト                         |
+| `max_tokens` | number | No   | -                | 最大出力トークン数（省略時はモデル任せ） |
 
 ### `search` -- Web 検索
 
 検索対応モデルを使って最新情報を取得します。
 
-| パラメータ   | 型     | 必須 | デフォルト              | 説明               |
-| ------------ | ------ | ---- | ----------------------- | ------------------ |
-| `query`      | string | Yes  | -                       | 検索クエリ         |
-| `model`      | string | No   | `google/gemini-3-flash` | 検索対応モデル ID  |
-| `max_tokens` | number | No   | `2000`                  | 最大出力トークン数 |
+| パラメータ   | 型     | 必須 | デフォルト              | 説明                                     |
+| ------------ | ------ | ---- | ----------------------- | ---------------------------------------- |
+| `query`      | string | Yes  | -                       | 検索クエリ                               |
+| `model`      | string | No   | `google/gemini-3-flash` | 検索対応モデル ID                        |
+| `max_tokens` | number | No   | -                       | 最大出力トークン数（省略時はモデル任せ） |
 
 ### `research` -- マルチモデル調査・比較
 
 複数モデルに並列クエリし、結果を統合または比較表示します。
 
-| パラメータ             | 型       | 必須 | デフォルト                         | 説明                                                |
-| ---------------------- | -------- | ---- | ---------------------------------- | --------------------------------------------------- |
-| `query`                | string   | Yes  | -                                  | 調査クエリ                                          |
-| `mode`                 | string   | No   | `search`                           | `search`（Web 検索）または `ask`（Q&A）             |
-| `models`               | string[] | No   | mode に応じた 4 モデル             | 2~4 モデル ID の配列                                |
-| `synthesize`           | boolean  | No   | `true`                             | `true`: 統合回答、`false`: 各モデルの回答を並列表示 |
-| `synthesis_model`      | string   | No   | `openai/gpt-5.2`                   | 統合に使うモデル（`synthesize:true` 時のみ）        |
-| `max_tokens`           | number   | No   | search: `2000` / ask: `4000`       | 各モデルの最大出力トークン数                        |
-| `synthesis_max_tokens` | number   | No   | search: `max_tokens×3` / ask: `×2` | 統合の最大出力トークン数                            |
+| パラメータ             | 型       | 必須 | デフォルト             | 説明                                                |
+| ---------------------- | -------- | ---- | ---------------------- | --------------------------------------------------- |
+| `query`                | string   | Yes  | -                      | 調査クエリ                                          |
+| `mode`                 | string   | No   | `search`               | `search`（Web 検索）または `ask`（Q&A）             |
+| `models`               | string[] | No   | mode に応じた 4 モデル | 2~4 モデル ID の配列                                |
+| `synthesize`           | boolean  | No   | `true`                 | `true`: 統合回答、`false`: 各モデルの回答を並列表示 |
+| `synthesis_model`      | string   | No   | `openai/gpt-5.2`       | 統合に使うモデル（`synthesize:true` 時のみ）        |
+| `max_tokens`           | number   | No   | -                      | 各モデルの最大出力トークン数（省略時はモデル任せ）  |
+| `synthesis_max_tokens` | number   | No   | -                      | 統合の最大出力トークン数（省略時はモデル任せ）      |
 
 **処理フロー:**
 
