@@ -1,5 +1,11 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.4.2
+
+### Patch Changes
+
+- [`5a2a2d8`](https://github.com/ayatec/ai-gateway-mcp-server/commit/5a2a2d875c80b9021f19f5af08bdb41dfa04978a) Thanks [@ayatec](https://github.com/ayatec)! - READMEのmax_tokensデフォルト値を実際のスキーマに合わせて修正（省略時はモデル任せ）
+
 ## 0.4.1
 
 ### Patch Changes
