@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { searchHandler, searchSchema, formatSources } from '../search.js';
+import { searchHandler, searchSchema, formatSources, isSearchResultPoor } from '../search.js';
 
 vi.mock('../../lib/gateway.js', () => ({
   generate: vi.fn(),
@@ -110,6 +110,148 @@ describe('search', () => {
       });
       expect(result.content[0].text).toBe('search result');
       expect(result.content[0].text).not.toContain('Sources');
+    });
+  });
+
+  describe('リトライ機能', () => {
+    it('結果が正常な場合はリトライしない', async () => {
+      mockGenerate.mockResolvedValue({
+        response: { content: [{ type: 'text', text: 'valid search result' }] },
+        durationMs: 200,
+      });
+
+      await searchHandler({ query: 'test', model: 'perplexity/sonar' });
+      expect(mockGenerate).toHaveBeenCalledTimes(1);
+    });
+
+    it('空レスポンスの場合はリトライする（デフォルト1回）', async () => {
+      mockGenerate
+        .mockResolvedValueOnce({
+          response: { content: [{ type: 'text', text: '' }] },
+          durationMs: 200,
+        })
+        .mockResolvedValueOnce({
+          response: { content: [{ type: 'text', text: 'retry result' }] },
+          durationMs: 200,
+        });
+
+      const result = await searchHandler({ query: 'test', model: 'perplexity/sonar' });
+      expect(mockGenerate).toHaveBeenCalledTimes(2);
+      expect(result.content[0].text).toBe('retry result');
+    });
+
+    it('「見つかりませんでした」系パターンの場合はリトライする', async () => {
+      mockGenerate
+        .mockResolvedValueOnce({
+          response: { content: [{ type: 'text', text: '情報が見つかりませんでした' }] },
+          durationMs: 200,
+        })
+        .mockResolvedValueOnce({
+          response: { content: [{ type: 'text', text: 'retry result' }] },
+          durationMs: 200,
+        });
+
+      const result = await searchHandler({ query: 'test', model: 'perplexity/sonar' });
+      expect(mockGenerate).toHaveBeenCalledTimes(2);
+      expect(result.content[0].text).toBe('retry result');
+    });
+
+    it('エラーレスポンスの場合はリトライする', async () => {
+      mockGenerate
+        .mockResolvedValueOnce({
+          response: { content: [{ type: 'text', text: 'Error: something failed' }] },
+          durationMs: 0,
+          isError: true,
+        })
+        .mockResolvedValueOnce({
+          response: { content: [{ type: 'text', text: 'retry result' }] },
+          durationMs: 200,
+        });
+
+      const result = await searchHandler({ query: 'test', model: 'perplexity/sonar' });
+      expect(mockGenerate).toHaveBeenCalledTimes(2);
+      expect(result.content[0].text).toBe('retry result');
+    });
+
+    it('max_retries:0 でリトライしない', async () => {
+      mockGenerate.mockResolvedValue({
+        response: { content: [{ type: 'text', text: '' }] },
+        durationMs: 200,
+      });
+
+      await searchHandler({ query: 'test', model: 'perplexity/sonar', max_retries: 0 });
+      expect(mockGenerate).toHaveBeenCalledTimes(1);
+    });
+
+    it('max_retries:2 で最大2回リトライ（全て失敗時も3回で打ち止め）', async () => {
+      mockGenerate.mockResolvedValue({
+        response: { content: [{ type: 'text', text: '' }] },
+        durationMs: 200,
+      });
+
+      await searchHandler({ query: 'test', model: 'perplexity/sonar', max_retries: 2 });
+      // 初回 + 最大2リトライ = 合計3回
+      expect(mockGenerate).toHaveBeenCalledTimes(3);
+    });
+
+    it('1回目失敗 → リトライ → 失敗 → 最後の結果をそのまま返す', async () => {
+      mockGenerate
+        .mockResolvedValueOnce({
+          response: { content: [{ type: 'text', text: 'Error: first attempt failed' }] },
+          durationMs: 0,
+          isError: true,
+        })
+        .mockResolvedValueOnce({
+          response: { content: [{ type: 'text', text: 'Error: retry also failed' }] },
+          durationMs: 0,
+          isError: true,
+        });
+
+      // max_retries:1（デフォルト）で1回リトライ、失敗しても最後の結果を返す
+      const result = await searchHandler({ query: 'test', model: 'perplexity/sonar' });
+      expect(mockGenerate).toHaveBeenCalledTimes(2);
+      expect(result.content[0].text).toBe('Error: retry also failed');
+    });
+  });
+
+  describe('isSearchResultPoor', () => {
+    it('空文字は不十分と判定する', () => {
+      expect(isSearchResultPoor('')).toBe(true);
+      expect(isSearchResultPoor('   ')).toBe(true);
+    });
+
+    it('isError:true は不十分と判定する', () => {
+      expect(isSearchResultPoor('some text', true)).toBe(true);
+    });
+
+    it('日本語の「見つかりませんでした」パターンを検出する', () => {
+      expect(isSearchResultPoor('情報が見つかりませんでした')).toBe(true);
+      expect(isSearchResultPoor('見つかりませんでした')).toBe(true);
+      expect(isSearchResultPoor('該当する情報はありません')).toBe(true);
+      expect(isSearchResultPoor('該当する結果が見つかりません')).toBe(true);
+    });
+
+    it('英語の「no results found」パターンを検出する', () => {
+      expect(isSearchResultPoor('No results found')).toBe(true);
+      expect(isSearchResultPoor('No information available')).toBe(true);
+      expect(isSearchResultPoor("Couldn't find any results")).toBe(true);
+      expect(isSearchResultPoor('Unable to find the requested information')).toBe(true);
+      expect(isSearchResultPoor('Search returned no results')).toBe(true);
+    });
+
+    it('gateway の空レスポンスメッセージを検出する', () => {
+      expect(isSearchResultPoor('（レスポンスが空でした）')).toBe(true);
+    });
+
+    it('10文字未満のテキストは不十分と判定する', () => {
+      // 極端に短いレスポンスは検索失敗の可能性が高い
+      expect(isSearchResultPoor('短い')).toBe(true);
+      expect(isSearchResultPoor('ok')).toBe(true);
+    });
+
+    it('正常なレスポンスは不十分と判定しない', () => {
+      expect(isSearchResultPoor('Here is the search result about TypeScript.')).toBe(false);
+      expect(isSearchResultPoor('TypeScript 5.0 was released in March 2023.')).toBe(false);
     });
   });
 
