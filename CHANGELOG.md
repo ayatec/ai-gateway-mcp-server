@@ -1,5 +1,11 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.4.1
+
+### Patch Changes
+
+- [`479b854`](https://github.com/ayatec/ai-gateway-mcp-server/commit/479b8542bd3852ebaa2882dbe8918b9a94370647) Thanks [@ayatec](https://github.com/ayatec)! - Perplexityモデルのネイティブ検索対応を修正し、Vercel AI Gateway未対応のsonar-deep-researchを削除
+
 ## 0.4.0
 
 ### Minor Changes
