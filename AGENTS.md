@@ -50,12 +50,12 @@ scripts/
    - askモード: 高性能4モデル（gpt-5.2, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro）
 4. **list_models** — モデル一覧（provider/capabilityフィルタ対応）
 
-### 対応プロバイダー・モデル（14モデル）
+### 対応プロバイダー・モデル（13モデル）
 
 - **OpenAI**: gpt-5.2, gpt-5.2-codex, gpt-5-mini, gpt-5-nano, gpt-oss-120b
 - **Anthropic**: claude-opus-4.6, claude-sonnet-4.6, claude-haiku-4.5
 - **Google**: gemini-3-flash, gemini-3.1-pro-preview
-- **Perplexity**: sonar, sonar-pro, sonar-reasoning-pro, sonar-deep-research
+- **Perplexity**: sonar, sonar-pro, sonar-reasoning-pro
 
 ### 環境変数
 
