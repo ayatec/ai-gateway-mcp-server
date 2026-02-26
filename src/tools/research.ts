@@ -28,7 +28,9 @@ export const researchSchema = z.object({
   query: z
     .string()
     .min(1)
-    .describe("Research query, e.g. 'Compare React Server Components vs Astro Islands'"),
+    .describe(
+      'Research query with detailed context. Prefer English for technical topics (official docs are mostly English). Use Japanese when searching for Japan-specific services or local information. Include specific technical terms (version numbers, API names) for best accuracy.',
+    ),
   mode: z
     .enum(['ask', 'search'])
     .default('search')
@@ -218,6 +220,12 @@ export async function researchHandler(
 export const researchTool = {
   name: 'research',
   description:
-    'Multi-model parallel research. Queries 2-4 AI models simultaneously for diverse perspectives, then optionally synthesizes results. mode:search (default): web research with grounding. mode:ask: multi-model Q&A without web search — ideal when you want multiple viewpoints on a question. synthesize:true (default): merges results via synthesis model. synthesize:false: shows each model response side by side with latency and pricing info.',
+    'Multi-model parallel research. Queries 2-4 AI models simultaneously, then optionally synthesizes results. ' +
+    'Use instead of search when: (1) you need higher confidence via cross-validation across sources, (2) you want diverse perspectives on a topic. ' +
+    'mode:search (default): web research with grounding across 4 models (sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini). ' +
+    'mode:ask: multi-model Q&A without web search — for architecture decisions, trade-off analysis, diverse expert opinions (uses gpt-5.2, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro). ' +
+    'synthesize:true (default): merges all responses into one comprehensive answer. ' +
+    'synthesize:false: shows each model side-by-side with latency and cost — useful for comparing perspectives or when you want raw answers. ' +
+    'Query tip: prefer English for technical topics, one focused topic per query — same best practices as the search tool apply.',
   paramsSchema: researchSchema.shape,
 };
