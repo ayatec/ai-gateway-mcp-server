@@ -1,5 +1,6 @@
 import { generateText, type GenerateTextResult } from 'ai';
 import { resolveModel, gateway } from '../providers/index.js';
+import { getModel } from './model-registry.js';
 import type { ModelId, Source, ToolResponse } from '../types/index.js';
 
 /** AI SDK の Source 型（GenerateTextResult.sources から推論） */
@@ -107,7 +108,10 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
   const startTime = Date.now();
 
   try {
-    const tools = options.useSearch ? buildSearchTools() : undefined;
+    // Perplexityモデルはネイティブ検索を持つため、外部ツールを渡さない
+    const modelDef = getModel(options.modelId);
+    const isNativeSearch = modelDef.provider === 'perplexity';
+    const tools = options.useSearch && !isNativeSearch ? buildSearchTools() : undefined;
 
     const result = await generateText({
       model,
