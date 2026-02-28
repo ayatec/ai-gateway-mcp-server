@@ -1,5 +1,14 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.5.0
+
+### Minor Changes
+
+- [`df8248f`](https://github.com/ayatec/ai-gateway-mcp-server/commit/df8248fdd7c4cc9ef10ea8253a11fe2e3009a623) Thanks [@ayatec](https://github.com/ayatec)! - searchツールにリトライ機能を追加し、search/researchツールの説明文を改善
+  - searchツールに `max_retries` パラメータを追加（デフォルト: 1）。検索結果が不十分な場合に自動リトライする
+  - `isSearchResultPoor` 関数で空レスポンスやエラー、「情報が見つからない」系パターンを検出
+  - search/researchツールの説明文をより詳細に改善（クエリのコツ、モデルガイド、使い分け指針）
+
 ## 0.4.2
 
 ### Patch Changes
