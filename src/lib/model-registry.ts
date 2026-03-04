@@ -16,7 +16,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 128000,
     releasedAt: '2025-12-11',
-    note: 'OpenAI最上位、askデフォルト',
+    note: 'OpenAI最上位。推論・コード・検索すべて高水準でaskデフォルト、キャッシュ利用時のコスパも良い',
   },
   {
     id: 'openai/gpt-5.2-codex',
@@ -31,7 +31,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 128000,
     releasedAt: '2026-01-14',
-    note: 'コード特化',
+    note: 'GPT-5.2ベースのコード特化版。リファクタ・マイグレーション等の実務的な開発タスクに最適',
   },
   {
     id: 'openai/gpt-5-mini',
@@ -46,7 +46,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 128000,
     releasedAt: '2025-08-07',
-    note: '軽量汎用、推論・検索・コード対応',
+    note: '低コスト汎用モデル。コーディングに特に強く、推論・検索も対応する万能型',
   },
   {
     id: 'openai/gpt-5-nano',
@@ -57,7 +57,7 @@ const models: ModelDefinition[] = [
     pricing: { input: 0.05, cachedInput: 0.0125, output: 0.4 },
     maxOutputTokens: 128000,
     releasedAt: '2025-08-07',
-    note: '最軽量、生成専用',
+    note: '最安モデル。シンプルな生成・分類向けで推論・検索は非対応',
   },
   {
     id: 'openai/gpt-oss-120b',
@@ -68,7 +68,7 @@ const models: ModelDefinition[] = [
     pricing: { input: 0.1, cachedInput: 0.025, output: 0.5 },
     maxOutputTokens: 32768,
     releasedAt: '2025-08-05',
-    note: 'OSS、検索非対応',
+    note: 'OpenAI公開のOSSモデル。低コストで推論・コード対応、検索非対応',
   },
   // --- Anthropic ---
   {
@@ -85,7 +85,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 128000,
     releasedAt: '2026-02-05',
-    note: 'Anthropic最上位、1Mコンテキスト',
+    note: 'Anthropic最上位。SWE-bench最強クラスでコーディング精度が突出、1Mコンテキスト',
   },
   {
     id: 'anthropic/claude-sonnet-4.6',
@@ -101,7 +101,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 128000,
     releasedAt: '2026-02-17',
-    note: '中位汎用、1Mコンテキスト',
+    note: 'Opusの約1/2コストで高品質。エージェント用途やコスパ重視の汎用タスク向け、1Mコンテキスト',
   },
   {
     id: 'anthropic/claude-haiku-4.5',
@@ -117,7 +117,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 64000,
     releasedAt: '2025-10-15',
-    note: '低レイテンシ軽量',
+    note: 'Anthropic軽量モデル。低レイテンシで検索・コード対応、高速処理向け',
   },
   // --- Google ---
   {
@@ -134,7 +134,18 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 8192,
     releasedAt: '2025-12-17',
-    note: 'Google Search grounding対応、1Mコンテキスト、searchデフォルト',
+    note: 'Google Search grounding対応で検索精度が高い。コーディングも強く、searchデフォルト、1Mコンテキスト',
+  },
+  {
+    id: 'google/gemini-3.1-flash-lite-preview',
+    provider: 'google',
+    displayName: 'Gemini 3.1 Flash-Lite Preview',
+    contextWindow: 1_000_000,
+    capabilities: { search: false, reasoning: false, coding: false, fast: true, cheap: true },
+    pricing: { input: 0.25, cachedInput: 0.0625, output: 1.5 },
+    maxOutputTokens: 65535,
+    releasedAt: '2026-03-03',
+    note: '最速クラスのスループット。低コストで推論・知識に強いが検索非対応、preview版',
   },
   {
     id: 'google/gemini-3.1-pro-preview',
@@ -150,7 +161,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 65536,
     releasedAt: '2026-02-19',
-    note: 'Google上位、Gemini 3 Proの後継',
+    note: 'Google最上位。科学推論・マルチモーダルに強く、Gemini 3 Proの後継、1Mコンテキスト',
   },
   // --- Perplexity ---
   {
@@ -167,7 +178,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 16384,
     releasedAt: '2025-01-21',
-    note: '検索ネイティブ、低レイテンシ',
+    note: '検索特化で最安。単発の事実確認やニュース検索に最適、低レイテンシ',
   },
   {
     id: 'perplexity/sonar-pro',
@@ -183,7 +194,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 16384,
     releasedAt: '2025-01-21',
-    note: '高精度検索',
+    note: '高精度検索。最大5回の内部検索で深掘りでき、技術ドキュメントの詳細調査向け',
   },
   {
     id: 'perplexity/sonar-reasoning-pro',
@@ -199,7 +210,7 @@ const models: ModelDefinition[] = [
     },
     maxOutputTokens: 16384,
     releasedAt: '2025-03-07',
-    note: '推論+高精度検索',
+    note: '推論+検索のハイブリッド。根拠付きの分析が必要な複雑な調査向け',
   },
 ];
 
