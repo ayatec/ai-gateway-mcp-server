@@ -1,5 +1,11 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.6.1
+
+### Patch Changes
+
+- [`e952f4b`](https://github.com/ayatec/ai-gateway-mcp-server/commit/e952f4b6273858ff71cf595e73d86375db840b8f) Thanks [@ayatec](https://github.com/ayatec)! - READMEのサポートモデル一覧を更新（Flash-Lite追加・全モデルの特徴欄をmodel-registryと統一）
+
 ## 0.6.0
 
 ### Minor Changes
