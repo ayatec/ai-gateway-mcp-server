@@ -105,6 +105,24 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 
 [Vercel AI Gateway](https://vercel.com/ai-gateway) の API キーを取得し、設定します。
 
+| 変数名                | 必須 | 説明                                    |
+| --------------------- | ---- | --------------------------------------- |
+| `AI_GATEWAY_API_KEY`  | Yes  | Vercel AI Gateway API キー              |
+| `ZERO_DATA_RETENTION` | No   | `true` で Gateway レベルの ZDR を有効化 |
+
+## プライバシー・データ保持
+
+各プロバイダーへのリクエストに、プライバシー保護のための設定を自動付与します。
+
+| プロバイダー   | 対応                                                  |
+| -------------- | ----------------------------------------------------- |
+| **OpenAI**     | `store: false` を全リクエストに付与（データ保存無効） |
+| **Anthropic**  | API 経由はデフォルトで学習不使用                      |
+| **Google**     | 有料 API はデフォルトで学習不使用                     |
+| **Perplexity** | API はデフォルトで Zero Data Retention                |
+
+`ZERO_DATA_RETENTION=true` を設定すると、Vercel AI Gateway レベルの ZDR が有効になり、ZDR 契約済みプロバイダーにのみリクエストがルーティングされます。Perplexity は自前で ZDR を保証しているため Gateway ZDR の適用対象外です。
+
 ### 2. MCP 設定
 
 #### npx で使う場合（推奨）
@@ -190,7 +208,7 @@ pnpm format:check   # フォーマットチェック
 `pnpm dev:tool` で各ツールを個別にテストできます。
 
 ```bash
-# ask（デフォルト: gpt-5.2）
+# ask（デフォルト: gpt-5.4）
 pnpm dev:tool ask --question "TypeScriptの利点は？"
 
 # ask（モデル指定）
@@ -206,7 +224,7 @@ pnpm dev:tool research --query "WebAssemblyの現状と将来"
 pnpm dev:tool research --query "関数型プログラミングの利点" --mode ask --synthesize false
 
 # research（モデル指定）
-pnpm dev:tool research --query "latest TypeScript features" --models '["openai/gpt-5.2","perplexity/sonar"]'
+pnpm dev:tool research --query "latest TypeScript features" --models '["openai/gpt-5.4","perplexity/sonar"]'
 
 # list_models
 pnpm dev:tool list_models
