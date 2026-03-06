@@ -17,12 +17,12 @@ const DEFAULT_SEARCH_MODELS: ModelId[] = [
   'openai/gpt-5-mini',
 ];
 const DEFAULT_ASK_MODELS: ModelId[] = [
-  'openai/gpt-5.2',
+  'openai/gpt-5.4',
   'anthropic/claude-opus-4.6',
   'google/gemini-3.1-pro-preview',
   'perplexity/sonar-reasoning-pro',
 ];
-const DEFAULT_SYNTHESIS_MODEL: ModelId = 'openai/gpt-5.2';
+const DEFAULT_SYNTHESIS_MODEL: ModelId = 'openai/gpt-5.4';
 
 export const researchSchema = z.object({
   query: z
@@ -43,7 +43,7 @@ export const researchSchema = z.object({
     .max(4)
     .optional()
     .describe(
-      '2-4 models to query in parallel. Defaults depend on mode — search: [perplexity/sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini] (cost-effective, diversity-focused). ask: [gpt-5.2, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro] (high-capability reasoning models from 4 providers)',
+      '2-4 models to query in parallel. Defaults depend on mode — search: [perplexity/sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini] (cost-effective, diversity-focused). ask: [gpt-5.4, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro] (high-capability reasoning models from 4 providers)',
     ),
   synthesize: z
     .boolean()
@@ -55,7 +55,7 @@ export const researchSchema = z.object({
     .string()
     .optional()
     .describe(
-      "Model for synthesis (only when synthesize:true), e.g. 'anthropic/claude-opus-4.6'. Default: openai/gpt-5.2",
+      "Model for synthesis (only when synthesize:true), e.g. 'anthropic/claude-opus-4.6'. Default: openai/gpt-5.4",
     ),
   max_tokens: z
     .number()
@@ -223,7 +223,7 @@ export const researchTool = {
     'Multi-model parallel research. Queries 2-4 AI models simultaneously, then optionally synthesizes results. ' +
     'Use instead of search when: (1) you need higher confidence via cross-validation across sources, (2) you want diverse perspectives on a topic. ' +
     'mode:search (default): web research with grounding across 4 models (sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini). ' +
-    'mode:ask: multi-model Q&A without web search — for architecture decisions, trade-off analysis, diverse expert opinions (uses gpt-5.2, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro). ' +
+    'mode:ask: multi-model Q&A without web search — for architecture decisions, trade-off analysis, diverse expert opinions (uses gpt-5.4, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro). ' +
     'synthesize:true (default): merges all responses into one comprehensive answer. ' +
     'synthesize:false: shows each model side-by-side with latency and cost — useful for comparing perspectives or when you want raw answers. ' +
     'Query tip: prefer English for technical topics, one focused topic per query — same best practices as the search tool apply.',

@@ -11,7 +11,7 @@ export const askSchema = z.object({
   model: z
     .string()
     .optional()
-    .default('openai/gpt-5.2')
+    .default('openai/gpt-5.4')
     .describe(
       "Model in provider/name format, e.g. 'openai/gpt-5.2-codex', 'anthropic/claude-sonnet-4.6'",
     ),
@@ -56,6 +56,6 @@ export async function askHandler(
 export const askTool = {
   name: 'ask',
   description:
-    'Ask a single AI model a question (no web search, cannot retrieve latest/real-time information). Default: openai/gpt-5.2 (flagship, $1.75/$14, 400K ctx). For multiple perspectives on a question, prefer research tool with mode:ask synthesize:false. For code: openai/gpt-5.2-codex. For cheaper: openai/gpt-5-mini ($0.25/$2) or google/gemini-3.1-flash-lite-preview ($0.25/$1.50). For cheapest: openai/gpt-5-nano ($0.05/$0.40).',
+    'Ask a single AI model a question (no web search, cannot retrieve latest/real-time information). Default: openai/gpt-5.4 (flagship, $2.50/$15, 1.05M ctx). For multiple perspectives on a question, prefer research tool with mode:ask synthesize:false. For code: openai/gpt-5.3-codex. For cheaper: openai/gpt-5-mini ($0.25/$2) or google/gemini-3.1-flash-lite-preview ($0.25/$1.50). For cheapest: openai/gpt-5-nano ($0.05/$0.40).',
   paramsSchema: askSchema.shape,
 };
