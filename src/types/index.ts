@@ -4,8 +4,8 @@ export type ProviderId = 'openai' | 'anthropic' | 'google' | 'perplexity';
 // モデル識別子（プロバイダー/モデル名 形式）
 export type ModelId =
   // OpenAI
-  | 'openai/gpt-5.2'
-  | 'openai/gpt-5.2-codex'
+  | 'openai/gpt-5.4'
+  | 'openai/gpt-5.3-codex'
   | 'openai/gpt-5-mini'
   | 'openai/gpt-5-nano'
   | 'openai/gpt-oss-120b'

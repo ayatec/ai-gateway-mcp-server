@@ -4,24 +4,24 @@ import type { ModelDefinition, ModelId, ProviderId, CapabilityFilter } from '../
 const models: ModelDefinition[] = [
   // --- OpenAI ---
   {
-    id: 'openai/gpt-5.2',
+    id: 'openai/gpt-5.4',
     provider: 'openai',
-    displayName: 'GPT-5.2',
-    contextWindow: 400_000,
+    displayName: 'GPT-5.4',
+    contextWindow: 1_050_000,
     capabilities: { search: true, reasoning: true, coding: true, fast: false, cheap: false },
-    pricing: { input: 1.75, cachedInput: 0.4375, output: 14.0 },
+    pricing: { input: 2.5, cachedInput: 0.25, output: 15.0 },
     searchCost: {
       type: 'token_based',
       description: '検索結果がinputトークンに含まれる（膨張大）',
     },
     maxOutputTokens: 128000,
-    releasedAt: '2025-12-11',
-    note: 'OpenAI最上位。推論・コード・検索すべて高水準でaskデフォルト、キャッシュ利用時のコスパも良い',
+    releasedAt: '2026-03-05',
+    note: 'OpenAI最上位。推論・コード・エージェント性能が5.2から大幅向上、1.05Mコンテキスト、キャッシュ割引90%',
   },
   {
-    id: 'openai/gpt-5.2-codex',
+    id: 'openai/gpt-5.3-codex',
     provider: 'openai',
-    displayName: 'GPT-5.2 Codex',
+    displayName: 'GPT-5.3 Codex',
     contextWindow: 400_000,
     capabilities: { search: true, reasoning: true, coding: true, fast: false, cheap: false },
     pricing: { input: 1.75, cachedInput: 0.4375, output: 14.0 },
@@ -30,8 +30,8 @@ const models: ModelDefinition[] = [
       description: '検索結果がinputトークンに含まれる（膨張大）',
     },
     maxOutputTokens: 128000,
-    releasedAt: '2026-01-14',
-    note: 'GPT-5.2ベースのコード特化版。リファクタ・マイグレーション等の実務的な開発タスクに最適',
+    releasedAt: '2026-02-05',
+    note: 'エージェント型コード特化版。5.2-codexから25%高速化、mid-task steering対応、Terminal-Bench最高水準',
   },
   {
     id: 'openai/gpt-5-mini',
