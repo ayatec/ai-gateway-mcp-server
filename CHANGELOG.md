@@ -1,5 +1,15 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.8.0
+
+### Minor Changes
+
+- [`c0a2068`](https://github.com/ayatec/ai-gateway-mcp-server/commit/c0a2068a391a2710434e7608d9b172089eecaf68) Thanks [@ayatec](https://github.com/ayatec)! - プロバイダーごとのプライバシー・データ保持設定を追加
+  - OpenAI: `store: false` を全リクエストに付与し、データ保存を無効化
+  - Anthropic/Google/Perplexity: APIデフォルトで学習不使用・ZDRのため追加パラメータ不要
+  - Vercel AI Gateway: `ZERO_DATA_RETENTION=true` 環境変数でGatewayレベルのZDRを有効化可能（PerplexityはGateway ZDR非対応のため自動除外）
+  - README・CLAUDE.mdにプライバシー設定・環境変数のドキュメントを追加
+
 ## 0.7.0
 
 ### Minor Changes
