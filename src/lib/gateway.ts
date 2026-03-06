@@ -1,10 +1,38 @@
 import { generateText, type GenerateTextResult } from 'ai';
 import { resolveModel, gateway } from '../providers/index.js';
+import { config } from '../config.js';
 import { getModel } from './model-registry.js';
-import type { ModelId, Source, ToolResponse } from '../types/index.js';
+import type { ModelId, ProviderId, Source, ToolResponse } from '../types/index.js';
 
 /** AI SDK の Source 型（GenerateTextResult.sources から推論） */
 type AISdkSource = GenerateTextResult<never, never>['sources'][number];
+
+/**
+ * プロバイダーごとのプライバシー・データ保持設定を構築。
+ *
+ * - OpenAI: store: false でリクエスト/レスポンスの保存を無効化
+ * - Anthropic: API経由はデフォルトで学習不使用（per-requestパラメータなし）
+ * - Google: 有料APIはデフォルトで学習不使用（per-requestパラメータなし）
+ * - Perplexity: APIはデフォルトでZDR（per-requestパラメータなし）
+ * - Gateway: ZERO_DATA_RETENTION=true で Gateway レベルの ZDR を有効化
+ */
+type JSONValue = string | number | boolean | null | JSONObject | JSONValue[];
+type JSONObject = { [key: string]: JSONValue | undefined };
+
+function buildPrivacyOptions(provider: ProviderId): Record<string, JSONObject> {
+  const options: Record<string, JSONObject> = {};
+
+  if (provider === 'openai') {
+    options.openai = { store: false };
+  }
+
+  // Perplexity APIはデフォルトでZDRのため、Gateway ZDRの適用対象外
+  if (config.zeroDataRetention && provider !== 'perplexity') {
+    options.gateway = { zeroDataRetention: true };
+  }
+
+  return options;
+}
 
 /** 検索ツールを構築（Gateway の perplexitySearch を全プロバイダーで統一使用） */
 function buildSearchTools() {
@@ -112,6 +140,7 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
     const modelDef = getModel(options.modelId);
     const isNativeSearch = modelDef.provider === 'perplexity';
     const tools = options.useSearch && !isNativeSearch ? buildSearchTools() : undefined;
+    const privacyOptions = buildPrivacyOptions(modelDef.provider);
 
     const result = await generateText({
       model,
@@ -121,6 +150,7 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
       tools,
       // ツール使用を強制し、モデルが検索をスキップするのを防ぐ
       ...(tools ? { toolChoice: 'required' as const } : {}),
+      providerOptions: privacyOptions,
     });
 
     let text = result.text;
@@ -146,6 +176,7 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
             `Based on the following search results, answer the user's question: "${options.prompt}"\n\n` +
             `Search results:\n${searchResults}`,
           ...(options.maxTokens ? { maxOutputTokens: options.maxTokens } : {}),
+          providerOptions: privacyOptions,
         });
         text = followUp.text;
       }
