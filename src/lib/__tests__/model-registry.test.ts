@@ -36,8 +36,8 @@ describe('model-registry', () => {
 
   describe('getModel', () => {
     it('有効なIDでモデルを取得できる', () => {
-      const model = getModel('openai/gpt-5.2');
-      expect(model.id).toBe('openai/gpt-5.2');
+      const model = getModel('openai/gpt-5.4');
+      expect(model.id).toBe('openai/gpt-5.4');
       expect(model.provider).toBe('openai');
     });
 
@@ -100,7 +100,7 @@ describe('model-registry', () => {
 
   describe('isValidModelId', () => {
     it('有効なモデルIDでtrueを返す', () => {
-      expect(isValidModelId('openai/gpt-5.2')).toBe(true);
+      expect(isValidModelId('openai/gpt-5.4')).toBe(true);
       expect(isValidModelId('perplexity/sonar')).toBe(true);
     });
 

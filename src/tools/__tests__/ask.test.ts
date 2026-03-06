@@ -19,7 +19,7 @@ describe('ask', () => {
     it('question のみでデフォルト値が適用される', () => {
       const result = askSchema.parse({ question: 'test' });
       expect(result.question).toBe('test');
-      expect(result.model).toBe('openai/gpt-5.2');
+      expect(result.model).toBe('openai/gpt-5.4');
       expect(result.max_tokens).toBeUndefined();
       expect(result.context).toBeUndefined();
     });
@@ -63,12 +63,12 @@ describe('ask', () => {
 
       const result = await askHandler({
         question: 'What is TypeScript?',
-        model: 'openai/gpt-5.2',
+        model: 'openai/gpt-5.4',
       });
       expect(result.content[0].text).toBe('mocked answer');
       expect(mockGenerate).toHaveBeenCalledWith(
         expect.objectContaining({
-          modelId: 'openai/gpt-5.2',
+          modelId: 'openai/gpt-5.4',
           prompt: 'What is TypeScript?',
           maxTokens: undefined,
         }),
@@ -83,7 +83,7 @@ describe('ask', () => {
 
       await askHandler({
         question: 'What does this do?',
-        model: 'openai/gpt-5.2',
+        model: 'openai/gpt-5.4',
         context: 'const x = 1;',
       });
       expect(mockGenerate).toHaveBeenCalledWith(

@@ -30,17 +30,17 @@ describe('research', () => {
       const result = researchSchema.parse({
         query: 'test',
         mode: 'ask',
-        models: ['openai/gpt-5.2', 'anthropic/claude-opus-4.6'],
+        models: ['openai/gpt-5.4', 'anthropic/claude-opus-4.6'],
         synthesize: false,
         max_tokens: 3000,
       });
       expect(result.mode).toBe('ask');
-      expect(result.models).toEqual(['openai/gpt-5.2', 'anthropic/claude-opus-4.6']);
+      expect(result.models).toEqual(['openai/gpt-5.4', 'anthropic/claude-opus-4.6']);
       expect(result.synthesize).toBe(false);
     });
 
     it('models が1つだけでエラー（最小2）', () => {
-      expect(() => researchSchema.parse({ query: 'test', models: ['openai/gpt-5.2'] })).toThrow();
+      expect(() => researchSchema.parse({ query: 'test', models: ['openai/gpt-5.4'] })).toThrow();
     });
 
     it('models が5つでエラー（最大4）', () => {
@@ -79,7 +79,7 @@ describe('research', () => {
     it('synthesize:false で各モデルの回答を並べて返す', async () => {
       mockGenerateParallel.mockResolvedValue([
         {
-          modelId: 'openai/gpt-5.2',
+          modelId: 'openai/gpt-5.4',
           result: {
             response: { content: [{ type: 'text', text: 'OpenAI response' }] },
             durationMs: 1000,
@@ -97,12 +97,12 @@ describe('research', () => {
       const result = await researchHandler({
         query: 'Compare approaches',
         mode: 'ask',
-        models: ['openai/gpt-5.2', 'anthropic/claude-opus-4.6'],
+        models: ['openai/gpt-5.4', 'anthropic/claude-opus-4.6'],
         synthesize: false,
       });
 
       const text = result.content[0].text;
-      expect(text).toContain('openai/gpt-5.2');
+      expect(text).toContain('openai/gpt-5.4');
       expect(text).toContain('anthropic/claude-opus-4.6');
       expect(text).toContain('OpenAI response');
       expect(text).toContain('Anthropic response');
@@ -113,7 +113,7 @@ describe('research', () => {
     it('synthesize:true で統合レスポンスを返す', async () => {
       mockGenerateParallel.mockResolvedValue([
         {
-          modelId: 'openai/gpt-5.2',
+          modelId: 'openai/gpt-5.4',
           result: {
             response: { content: [{ type: 'text', text: 'Response A' }] },
             durationMs: 800,
@@ -136,7 +136,7 @@ describe('research', () => {
       const result = await researchHandler({
         query: 'test question',
         mode: 'ask',
-        models: ['openai/gpt-5.2', 'anthropic/claude-opus-4.6'],
+        models: ['openai/gpt-5.4', 'anthropic/claude-opus-4.6'],
         synthesize: true,
       });
 
