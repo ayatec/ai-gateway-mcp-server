@@ -43,16 +43,16 @@ scripts/
 
 ### 提供ツール
 
-1. **ask** — 単一モデルへの質問（デフォルト: openai/gpt-5.2）。複数視点が必要ならresearch mode:ask synthesize:falseを推奨
+1. **ask** — 単一モデルへの質問（デフォルト: openai/gpt-5.4）。複数視点が必要ならresearch mode:ask synthesize:falseを推奨
 2. **search** — Web検索（デフォルト: google/gemini-3-flash）
 3. **research** — 複数モデル並列調査（ask/searchモード、synthesize on/off、2-4モデル）
    - searchモード: コスト重視の4モデル（sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini）
-   - askモード: 高性能4モデル（gpt-5.2, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro）
+   - askモード: 高性能4モデル（gpt-5.4, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro）
 4. **list_models** — モデル一覧（provider/capabilityフィルタ対応）
 
 ### 対応プロバイダー・モデル（14モデル）
 
-- **OpenAI**: gpt-5.2, gpt-5.2-codex, gpt-5-mini, gpt-5-nano, gpt-oss-120b
+- **OpenAI**: gpt-5.4, gpt-5.3-codex, gpt-5-mini, gpt-5-nano, gpt-oss-120b
 - **Anthropic**: claude-opus-4.6, claude-sonnet-4.6, claude-haiku-4.5
 - **Google**: gemini-3-flash, gemini-3.1-flash-lite-preview, gemini-3.1-pro-preview
 - **Perplexity**: sonar, sonar-pro, sonar-reasoning-pro

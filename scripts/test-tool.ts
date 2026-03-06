@@ -91,7 +91,7 @@ Examples:
   pnpm dev:tool search --query "Vercel AI SDK 最新情報"
   pnpm dev:tool research --query "AI agent frameworks 2026"
   pnpm dev:tool research --query "pros and cons of microservices" --mode ask --synthesize false
-  pnpm dev:tool research --query "latest TypeScript features" --models '["openai/gpt-5.2","perplexity/sonar"]'
+  pnpm dev:tool research --query "latest TypeScript features" --models '["openai/gpt-5.4","perplexity/sonar"]'
   pnpm dev:tool list_models
   pnpm dev:tool list_models --provider openai
 

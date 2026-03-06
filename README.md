@@ -16,7 +16,7 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 | パラメータ   | 型     | 必須 | デフォルト       | 説明                                     |
 | ------------ | ------ | ---- | ---------------- | ---------------------------------------- |
 | `question`   | string | Yes  | -                | 質問内容                                 |
-| `model`      | string | No   | `openai/gpt-5.2` | モデル ID                                |
+| `model`      | string | No   | `openai/gpt-5.4` | モデル ID                                |
 | `context`    | string | No   | -                | 追加コンテキスト                         |
 | `max_tokens` | number | No   | -                | 最大出力トークン数（省略時はモデル任せ） |
 
@@ -40,7 +40,7 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 | `mode`                 | string   | No   | `search`               | `search`（Web 検索）または `ask`（Q&A）             |
 | `models`               | string[] | No   | mode に応じた 4 モデル | 2~4 モデル ID の配列                                |
 | `synthesize`           | boolean  | No   | `true`                 | `true`: 統合回答、`false`: 各モデルの回答を並列表示 |
-| `synthesis_model`      | string   | No   | `openai/gpt-5.2`       | 統合に使うモデル（`synthesize:true` 時のみ）        |
+| `synthesis_model`      | string   | No   | `openai/gpt-5.4`       | 統合に使うモデル（`synthesize:true` 時のみ）        |
 | `max_tokens`           | number   | No   | -                      | 各モデルの最大出力トークン数（省略時はモデル任せ）  |
 | `synthesis_max_tokens` | number   | No   | -                      | 統合の最大出力トークン数（省略時はモデル任せ）      |
 
@@ -48,8 +48,8 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 
 1. **Query Stage**: 指定（またはデフォルト）モデルに並列リクエスト
    - `search` デフォルト: `perplexity/sonar`, `gemini-3-flash`, `claude-haiku-4.5`, `gpt-5-mini`
-   - `ask` デフォルト: `gpt-5.2`, `claude-opus-4.6`, `gemini-3.1-pro-preview`, `sonar-reasoning-pro`
-2. **Synthesis Stage** (`synthesize:true`): `openai/gpt-5.2` が全結果を精査・統合し、矛盾点を指摘、ソースを明記
+   - `ask` デフォルト: `gpt-5.4`, `claude-opus-4.6`, `gemini-3.1-pro-preview`, `sonar-reasoning-pro`
+2. **Synthesis Stage** (`synthesize:true`): `openai/gpt-5.4` が全結果を精査・統合し、矛盾点を指摘、ソースを明記
 3. **Comparison** (`synthesize:false`): 各モデルの回答をコスト・レイテンシ付きで並列表示
 
 ### `list_models` -- モデル一覧
@@ -65,13 +65,13 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 
 ### OpenAI
 
-| モデル ID              | 入力  | 出力   | 検索 | 特徴                                                                                           |
-| ---------------------- | ----- | ------ | ---- | ---------------------------------------------------------------------------------------------- |
-| `openai/gpt-5.2`       | $1.75 | $14.00 | Yes  | OpenAI 最上位。推論・コード・検索すべて高水準で ask デフォルト、キャッシュ利用時のコスパも良い |
-| `openai/gpt-5.2-codex` | $1.75 | $14.00 | Yes  | GPT-5.2 ベースのコード特化版。リファクタ・マイグレーション等の実務的な開発タスクに最適         |
-| `openai/gpt-5-mini`    | $0.25 | $2.00  | Yes  | 低コスト汎用モデル。コーディングに特に強く、推論・検索も対応する万能型                         |
-| `openai/gpt-5-nano`    | $0.05 | $0.40  | No   | 最安モデル。シンプルな生成・分類向けで推論・検索は非対応                                       |
-| `openai/gpt-oss-120b`  | $0.10 | $0.50  | No   | OpenAI 公開の OSS モデル。低コストで推論・コード対応、検索非対応                               |
+| モデル ID              | 入力  | 出力   | 検索 | 特徴                                                                                                     |
+| ---------------------- | ----- | ------ | ---- | -------------------------------------------------------------------------------------------------------- |
+| `openai/gpt-5.4`       | $2.50 | $15.00 | Yes  | OpenAI 最上位。推論・コード・エージェント性能が 5.2 から大幅向上、1.05M コンテキスト、キャッシュ割引 90% |
+| `openai/gpt-5.3-codex` | $1.75 | $14.00 | Yes  | エージェント型コード特化版。5.2-codex から 25% 高速化、mid-task steering 対応、Terminal-Bench 最高水準   |
+| `openai/gpt-5-mini`    | $0.25 | $2.00  | Yes  | 低コスト汎用モデル。コーディングに特に強く、推論・検索も対応する万能型                                   |
+| `openai/gpt-5-nano`    | $0.05 | $0.40  | No   | 最安モデル。シンプルな生成・分類向けで推論・検索は非対応                                                 |
+| `openai/gpt-oss-120b`  | $0.10 | $0.50  | No   | OpenAI 公開の OSS モデル。低コストで推論・コード対応、検索非対応                                         |
 
 ### Anthropic
 
