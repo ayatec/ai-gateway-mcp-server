@@ -60,6 +60,17 @@ scripts/
 ### 環境変数
 
 - `AI_GATEWAY_API_KEY` — Vercel AI Gateway APIキー（必須、これ1つで全プロバイダーにアクセス）
+- `ZERO_DATA_RETENTION` — `true` で Gateway レベルの ZDR を有効化（任意）
+
+### プライバシー・データ保持設定
+
+全リクエストにプロバイダーごとのプライバシー設定を自動付与（`src/lib/gateway.ts` の `buildPrivacyOptions`）。
+
+- **OpenAI**: `store: false` を全リクエストに付与（データ保存を無効化）
+- **Anthropic**: API経由はデフォルトで学習不使用（追加パラメータ不要）
+- **Google**: 有料APIはデフォルトで学習不使用（追加パラメータ不要）
+- **Perplexity**: APIはデフォルトでZDR（追加パラメータ不要）
+- **Gateway ZDR**: `ZERO_DATA_RETENTION=true` 時、ZDR契約済みプロバイダーにのみルーティング（Perplexityは自前ZDRのため適用外）
 
 ### Gateway アーキテクチャ
 
