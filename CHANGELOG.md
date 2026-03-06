@@ -1,5 +1,14 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.7.0
+
+### Minor Changes
+
+- [`f8cbba8`](https://github.com/ayatec/ai-gateway-mcp-server/commit/f8cbba8949de528e233417ee97054bbc05a0007f) Thanks [@ayatec](https://github.com/ayatec)! - OpenAIモデルを最新化: GPT-5.2→GPT-5.4に置き換え、GPT-5.2 Codex→GPT-5.3 Codexに置き換え
+  - GPT-5.4: 1.05Mコンテキスト、推論・コード・エージェント性能が大幅向上、キャッシュ割引90%
+  - GPT-5.3 Codex: 25%高速化、mid-task steering対応、Terminal-Bench最高水準
+  - askツール・researchツールのデフォルトモデルをGPT-5.4に更新
+
 ## 0.6.1
 
 ### Patch Changes
