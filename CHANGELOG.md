@@ -1,5 +1,11 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.9.0
+
+### Minor Changes
+
+- [`879b6aa`](https://github.com/ayatec/ai-gateway-mcp-server/commit/879b6aa2b76e93b5ac43df2637ef60f0f6e8f329) Thanks [@ayatec](https://github.com/ayatec)! - researchツールのsearchモードデフォルトモデルからclaude-haiku-4.5を削除し、コスト効率の高い3モデル構成（sonar, gemini-3-flash, gpt-5-mini）に変更
+
 ## 0.8.0
 
 ### Minor Changes
