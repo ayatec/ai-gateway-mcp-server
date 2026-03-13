@@ -46,7 +46,7 @@ scripts/
 1. **ask** — 単一モデルへの質問（デフォルト: openai/gpt-5.4）。複数視点が必要ならresearch mode:ask synthesize:falseを推奨
 2. **search** — Web検索（デフォルト: google/gemini-3-flash）
 3. **research** — 複数モデル並列調査（ask/searchモード、synthesize on/off、2-4モデル）
-   - searchモード: コスト重視の4モデル（sonar, gemini-3-flash, claude-haiku-4.5, gpt-5-mini）
+   - searchモード: コスト重視の3モデル（sonar, gemini-3-flash, gpt-5-mini）
    - askモード: 高性能4モデル（gpt-5.4, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro）
 4. **list_models** — モデル一覧（provider/capabilityフィルタ対応）
 

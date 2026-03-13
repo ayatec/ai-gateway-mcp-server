@@ -47,7 +47,7 @@ Web 検索、マルチモデル調査・比較など、LLM を活用した 4 つ
 **処理フロー:**
 
 1. **Query Stage**: 指定（またはデフォルト）モデルに並列リクエスト
-   - `search` デフォルト: `perplexity/sonar`, `gemini-3-flash`, `claude-haiku-4.5`, `gpt-5-mini`
+   - `search` デフォルト: `perplexity/sonar`, `gemini-3-flash`, `gpt-5-mini`
    - `ask` デフォルト: `gpt-5.4`, `claude-opus-4.6`, `gemini-3.1-pro-preview`, `sonar-reasoning-pro`
 2. **Synthesis Stage** (`synthesize:true`): `openai/gpt-5.4` が全結果を精査・統合し、矛盾点を指摘、ソースを明記
 3. **Comparison** (`synthesize:false`): 各モデルの回答をコスト・レイテンシ付きで並列表示
