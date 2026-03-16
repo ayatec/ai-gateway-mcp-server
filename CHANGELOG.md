@@ -1,5 +1,11 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.9.1
+
+### Patch Changes
+
+- [`2d1cd86`](https://github.com/ayatec/ai-gateway-mcp-server/commit/2d1cd868724ca87803ebb16eb98b9ca17b8666e9) Thanks [@ayatec](https://github.com/ayatec)! - search/researchツールのクエリに特定の年号を含めないようガイダンスを追加。「2024」「2025」等の年号の代わりに「latest」「current」「newest」を使用するよう、queryパラメータ説明とツールレベルのQuery tipsに明記
+
 ## 0.9.0
 
 ### Minor Changes
