@@ -8,7 +8,7 @@ export const searchSchema = z.object({
     .string()
     .min(1)
     .describe(
-      'Search query in natural language with detailed context. Use English for technical topics (most docs are in English), Japanese for Japan-specific info. One topic per query, include specific technical terms (version numbers, API names, config keys) for best accuracy. See tool description for full query tips and model guide.',
+      'Search query in natural language with detailed context. Use English for technical topics (most docs are in English), Japanese for Japan-specific info. One topic per query, include specific technical terms (version numbers, API names, config keys) for best accuracy. IMPORTANT: Never include specific years (e.g. "2024", "2025") in queries — use "latest", "current", or "newest" instead. Year numbers become outdated quickly and may miss newer results. See tool description for full query tips and model guide.',
     ),
   model: z
     .string()
@@ -164,6 +164,7 @@ export const searchTool = {
   description:
     'Web search with a single model. Use for real-time lookups. For multi-model parallel research, use the research tool.\n\n' +
     'Query tips (major accuracy improvement):\n' +
+    '- NEVER include specific years (e.g. "2024", "2025") — use "latest", "current", or "newest" instead. The search engine returns recent results automatically; hardcoded years risk missing newer content or retrieving outdated info\n' +
     '- One topic per query — split broad questions into multiple calls\n' +
     '- Prefer English for technical topics (official docs are mostly English). Use Japanese when searching for Japan-specific services or local information\n' +
     '- Include exact terms: version numbers, API names, config keys\n' +

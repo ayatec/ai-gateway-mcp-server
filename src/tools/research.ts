@@ -28,7 +28,7 @@ export const researchSchema = z.object({
     .string()
     .min(1)
     .describe(
-      'Research query with detailed context. Prefer English for technical topics (official docs are mostly English). Use Japanese when searching for Japan-specific services or local information. Include specific technical terms (version numbers, API names) for best accuracy.',
+      'Research query with detailed context. Prefer English for technical topics (official docs are mostly English). Use Japanese when searching for Japan-specific services or local information. Include specific technical terms (version numbers, API names) for best accuracy. IMPORTANT: Never include specific years (e.g. "2024", "2025") in queries — use "latest", "current", or "newest" instead. Year numbers become outdated quickly and may miss newer results.',
     ),
   mode: z
     .enum(['ask', 'search'])
@@ -225,6 +225,6 @@ export const researchTool = {
     'mode:ask: multi-model Q&A without web search — for architecture decisions, trade-off analysis, diverse expert opinions (uses gpt-5.4, claude-opus-4.6, gemini-3.1-pro-preview, sonar-reasoning-pro). ' +
     'synthesize:true (default): merges all responses into one comprehensive answer. ' +
     'synthesize:false: shows each model side-by-side with latency and cost — useful for comparing perspectives or when you want raw answers. ' +
-    'Query tip: prefer English for technical topics, one focused topic per query — same best practices as the search tool apply.',
+    'Query tip: prefer English for technical topics, one focused topic per query. NEVER include specific years in queries — use "latest"/"current"/"newest" instead. Same best practices as the search tool apply.',
   paramsSchema: researchSchema.shape,
 };
