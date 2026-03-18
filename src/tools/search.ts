@@ -15,7 +15,7 @@ export const searchSchema = z.object({
     .optional()
     .default('google/gemini-3-flash')
     .describe(
-      'Search-capable model. Default: google/gemini-3-flash ($$ general queries, broad coverage). For quick single-fact lookups: perplexity/sonar ($ extremely cheap, fastest). For official doc precision (migration guides, changelogs): openai/gpt-5-mini ($$). Last resort for a different perspective: anthropic/claude-haiku-4.5 ($$$, similar quality to $$ models but significantly more expensive). Also supports other anthropic and openai models with native search.',
+      'Search-capable model. Default: google/gemini-3-flash ($$ general queries, broad coverage). For quick single-fact lookups: perplexity/sonar ($ extremely cheap, fastest). For cheap search: openai/gpt-5.4-nano ($$ cheaper than gpt-5-mini, latest generation). For official doc precision (migration guides, changelogs): openai/gpt-5-mini ($$). For stronger reasoning in search: openai/gpt-5.4-mini ($$$). Last resort for a different perspective: anthropic/claude-haiku-4.5 ($$$, similar quality to $$ models but significantly more expensive). Also supports other anthropic and openai models with native search.',
     ),
   max_tokens: z
     .number()
@@ -172,9 +172,11 @@ export const searchTool = {
     '- Add site: prefix to target official docs\n\n' +
     'Model guide ($ = cheapest, $$$ = most expensive):\n' +
     '- perplexity/sonar ($): Extremely cheap (~1/20 cost of others). Fastest. Best for single-fact lookups and GitHub Issue searches\n' +
-    '- openai/gpt-5-mini ($$): Official doc precision — migration guides, changelogs, CVE details\n' +
+    '- openai/gpt-5.4-nano ($$): Latest gen nano with web search, cheaper than gpt-5-mini ($0.20/$1.25 vs $0.25/$2). Search quality comparable to gpt-5-mini for simple lookups, concise output\n' +
+    '- openai/gpt-5-mini ($$): More thorough/comprehensive search results. Best for deep technical docs — migration guides, changelogs, CVE details\n' +
     '- google/gemini-3-flash ($$ default): General queries, broad coverage, good all-around\n' +
-    '- anthropic/claude-haiku-4.5 ($$$): Last resort when other models lack needed info. Similar quality to $$ models but significantly more expensive — only use for a different perspective\n\n' +
+    '- openai/gpt-5.4-mini ($$$): Strong reasoning + search ($0.75/$4.50). Concise, high-confidence answers. Better cost-performance than claude-haiku-4.5\n' +
+    '- anthropic/claude-haiku-4.5 ($$$): Last resort when other models lack needed info. Most expensive search model ($1/$5) — only use for a different perspective\n\n' +
     'For parallel multi-model results or diverse perspectives, use the research tool.',
   paramsSchema: searchSchema.shape,
 };
