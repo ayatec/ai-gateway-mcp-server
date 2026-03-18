@@ -5,6 +5,8 @@ export type ProviderId = 'openai' | 'anthropic' | 'google' | 'perplexity';
 export type ModelId =
   // OpenAI
   | 'openai/gpt-5.4'
+  | 'openai/gpt-5.4-mini'
+  | 'openai/gpt-5.4-nano'
   | 'openai/gpt-5.3-codex'
   | 'openai/gpt-5-mini'
   | 'openai/gpt-5-nano'
