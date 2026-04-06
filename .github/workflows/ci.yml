@@ -93,7 +93,6 @@ jobs:
       - name: Setup npm for trusted publishing
         if: steps.publish.outputs.needed == 'true'
         run: |
-          npm install -g npm@latest
           npm config set //registry.npmjs.org/:_authToken ""
           echo "npm version: $(npm --version)"
 
