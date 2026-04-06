@@ -1,5 +1,16 @@
 # @ayatec/ai-gateway-mcp-server
 
+## 0.10.1
+
+### Patch Changes
+
+- [`98bb82d`](https://github.com/ayatec/ai-gateway-mcp-server/commit/98bb82d0cb0d239873c7487b10e0aae2fd901629) Thanks [@ayatec](https://github.com/ayatec)! - Gatewayの意図しないプロバイダーフォールバックを防止
+
+  Vercel AI Gatewayのデフォルト動的ルーティングにより、OpenAIリクエストがAzure OpenAIに
+  フォールバックされ、BYOK未設定の共用インフラ経由で異常に遅くなる問題を修正。
+  `providerOptions.gateway.only` で各プロバイダーを明示的に固定し、
+  意図しないルーティングを防止するようにした。
+
 ## 0.10.0
 
 ### Minor Changes
