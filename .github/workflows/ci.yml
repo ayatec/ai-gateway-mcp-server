@@ -90,12 +90,6 @@ jobs:
             echo "needed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Setup npm for trusted publishing
-        if: steps.publish.outputs.needed == 'true'
-        run: |
-          npm config set //registry.npmjs.org/:_authToken ""
-          echo "npm version: $(npm --version)"
-
       - name: Build and publish
         if: steps.publish.outputs.needed == 'true'
         run: |
