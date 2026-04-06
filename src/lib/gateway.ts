@@ -19,17 +19,36 @@ type AISdkSource = GenerateTextResult<never, never>['sources'][number];
 type JSONValue = string | number | boolean | null | JSONObject | JSONValue[];
 type JSONObject = { [key: string]: JSONValue | undefined };
 
-function buildPrivacyOptions(provider: ProviderId): Record<string, JSONObject> {
+/**
+ * ProviderId から Gateway ルーティングで使用するプロバイダー識別子へのマッピング。
+ * Gateway はデフォルトで動的ルーティングを行い、OpenAI → Azure 等の
+ * 意図しないフォールバックが発生するため、`only` で明示的に固定する。
+ */
+const GATEWAY_PROVIDER_ID: Record<ProviderId, string> = {
+  openai: 'openai',
+  anthropic: 'anthropic',
+  google: 'vertex',
+  perplexity: 'perplexity',
+};
+
+function buildProviderOptions(provider: ProviderId): Record<string, JSONObject> {
   const options: Record<string, JSONObject> = {};
 
   if (provider === 'openai') {
     options.openai = { store: false };
   }
 
+  // Gateway オプション: プロバイダー固定 + ZDR
+  const gatewayOptions: JSONObject = {
+    only: [GATEWAY_PROVIDER_ID[provider]],
+  };
+
   // Perplexity APIはデフォルトでZDRのため、Gateway ZDRの適用対象外
   if (config.zeroDataRetention && provider !== 'perplexity') {
-    options.gateway = { zeroDataRetention: true };
+    gatewayOptions.zeroDataRetention = true;
   }
+
+  options.gateway = gatewayOptions;
 
   return options;
 }
@@ -140,7 +159,7 @@ export async function generate(options: GenerateOptions): Promise<GenerateResult
     const modelDef = getModel(options.modelId);
     const isNativeSearch = modelDef.provider === 'perplexity';
     const tools = options.useSearch && !isNativeSearch ? buildSearchTools() : undefined;
-    const privacyOptions = buildPrivacyOptions(modelDef.provider);
+    const privacyOptions = buildProviderOptions(modelDef.provider);
 
     const result = await generateText({
       model,
